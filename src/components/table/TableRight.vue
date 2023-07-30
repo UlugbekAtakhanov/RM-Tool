@@ -30,6 +30,12 @@
             ></div>
             <GantLine :item="item" />
         </div>
+
+        <div>
+            <pre class="bg-slate-900 text-white">
+                {{ JSON.stringify(projectList, null, 2) }}
+            </pre>
+        </div>
     </div>
 </template>
 
@@ -85,7 +91,8 @@
             el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
         }
 
+        const { startPoint, duration, ...rest } = el;
         let mutatingElementIndex = projectList.value[parentIndex].phase.findIndex((item) => item.id === itemId);
-        projectList.value[parentIndex].phase[mutatingElementIndex] = el;
+        projectList.value[parentIndex].phase[mutatingElementIndex] = rest;
     };
 </script>

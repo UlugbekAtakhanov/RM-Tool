@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useDateRangeStore = defineStore("project-list", {
+export const useProjectListStore = defineStore("project-list", {
     state: () => [
         {
             title: "Project1",
