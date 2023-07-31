@@ -30,17 +30,11 @@
             ></div>
             <GantLine :item="item" />
         </div>
-
-        <div>
-            <pre class="bg-slate-900 text-white">
-                {{ JSON.stringify(projectList, null, 2) }}
-            </pre>
-        </div>
     </div>
 </template>
 
 <script setup>
-    import { computed, ref, watch } from "vue";
+    import { computed, ref } from "vue";
     import data from "../../data/auditor.json";
     import { useDateRangeStore } from "../../store/DateRange";
     import { storeToRefs } from "pinia";
@@ -96,3 +90,24 @@
         projectList.value[parentIndex].phase[mutatingElementIndex] = rest;
     };
 </script>
+
+<style scoped>
+    ::-webkit-scrollbar {
+        height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        cursor: pointer;
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: lightgray;
+        border-radius: 30px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: lightgray;
+        width: 70%;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: gray;
+    }
+</style>

@@ -10,7 +10,7 @@
                 <th>Team</th>
             </tr>
         </thead>
-        <tbody class="divide-y-[1px]">
+        <tbody>
             <tr v-for="(item, index) in projectList" :key="item.id" class="hover:bg-sky-50 text-center h-[33px]">
                 <td class="text-xs">{{ index + 1 }}</td>
                 <td class="text-left">{{ item.title }}</td>
