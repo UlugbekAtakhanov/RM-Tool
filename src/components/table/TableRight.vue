@@ -69,6 +69,7 @@
         return newList;
     });
 
+    // on drop effect
     const onDrop = (e, phases, parentIndex) => {
         const itemId = parseInt(e.dataTransfer.getData("itemId"));
         let el = phases.find((item) => item.id === itemId);
