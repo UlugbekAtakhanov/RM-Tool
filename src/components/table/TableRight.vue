@@ -27,9 +27,13 @@
                 :data-index="index"
                 :key="index"
                 class="w-[80px] text-xs border-l"
+                :projectList="projectList"
             ></div>
-            <GantLine :item="item" />
+            <GantLine :item="item" :projectList="projectList" />
         </div>
+    </div>
+    <div class="fixed top-[255px] bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
+        <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
     </div>
 </template>
 
@@ -86,8 +90,8 @@
             el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
         }
 
-        const { startPoint, duration, ...rest } = el;
-        let mutatingElementIndex = projectList.value[parentIndex].phase.findIndex((item) => item.id === itemId);
+        const { startPoint, ...rest } = el;
+        const mutatingElementIndex = projectList.value[parentIndex].phase.findIndex((item) => item.id === itemId);
         projectList.value[parentIndex].phase[mutatingElementIndex] = rest;
     };
 </script>
