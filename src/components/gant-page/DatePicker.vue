@@ -14,8 +14,8 @@
 <script setup>
     import { ref, watch } from "vue";
     import VueTailwindDatepicker from "vue-tailwind-datepicker";
-    import { useDateRangeStore } from "../store/DateRange";
     import { storeToRefs } from "pinia";
+    import { useDateRangeStore } from "../../store/DateRange";
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);

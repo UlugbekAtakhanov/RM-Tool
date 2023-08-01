@@ -1,20 +1,30 @@
 <template>
-    <h1 class="text-2xl font-semibold text-center p-4">RM Tool</h1>
-    <div class="px-4">
-        <DatePicker />
-        <div class="flex items-start">
-            <TableLeft />
-            <TableRight />
-        </div>
-    </div>
+    <n-config-provider :theme="theme" :theme-overrides="theme === null ? lightThemeOverrides : darkThemeOverrides">
+        <n-message-provider>
+            <div class="pb-[500px]">
+                <Navbar />
+                <RouterView />
+            </div>
+        </n-message-provider>
+    </n-config-provider>
 </template>
 
 <script setup>
-    import TableLeft from "./components/table/TableLeft.vue";
-    import TableRight from "./components/table/TableRight.vue";
-    import DatePicker from "./components/DatePicker.vue";
-    import { useDateRangeStore } from "./store/DateRange";
+    import Navbar from "./components/Navbar.vue";
+    import { RouterView } from "vue-router";
+    import { NConfigProvider } from "naive-ui";
 
-    const dateRangeStore = useDateRangeStore();
-    dateRangeStore.initialDateRange();
+    const lightThemeOverrides = {
+        common: {
+            primaryColor: "rgb(14 ,165, 233)",
+            primaryColorHover: "rgb(3, 105 ,161 )",
+            primaryColorPressed: "rgb(14 ,165, 233)",
+        },
+    };
+    const darkThemeOverrides = {
+        common: {
+            primaryColor: "#FFFFFF",
+        },
+    };
+    const theme = null;
 </script>

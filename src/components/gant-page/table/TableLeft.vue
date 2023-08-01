@@ -25,6 +25,6 @@
 
 <script setup>
     import { ref } from "vue";
-    import data from "../../data/auditor.json";
+    import data from "../../../data/auditor.json";
     const projectList = ref(data);
 </script>

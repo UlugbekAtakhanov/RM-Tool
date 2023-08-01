@@ -32,19 +32,19 @@
             <GantLine :item="item" :projectList="projectList" />
         </div>
     </div>
-    <div class="fixed top-[255px] bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
+    <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
         <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
     </div>
 </template>
 
 <script setup>
     import { computed, ref } from "vue";
-    import data from "../../data/auditor.json";
-    import { useDateRangeStore } from "../../store/DateRange";
+    import data from "../../../data/auditor.json";
     import { storeToRefs } from "pinia";
     import { format } from "date-fns";
-    import { days, getAmountDay } from "../../utils/Days";
+    import { days, getAmountDay } from "../../../utils/Days";
     import GantLine from "./GantLine.vue";
+    import { useDateRangeStore } from "../../../store/DateRange";
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);

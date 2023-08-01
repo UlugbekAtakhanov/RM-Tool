@@ -22,7 +22,7 @@
 <script setup>
     import { format } from "date-fns";
     import { ref, toRefs } from "vue";
-    import { getAmountDay } from "../../utils/Days";
+    import { getAmountDay } from "../../../utils/Days";
 
     const el = ref([]);
     const props = defineProps({ item: Object, projectList: Array, parentIndex: Number });
