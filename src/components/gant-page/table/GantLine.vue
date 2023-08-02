@@ -29,6 +29,7 @@
     const { item, projectList } = toRefs(props);
 
     const startDrag = (e, item) => {
+        console.log(e);
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData("itemId", item.id);

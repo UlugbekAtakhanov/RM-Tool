@@ -1,11 +1,16 @@
 <template>
-    <div class="flex-[2] shrink-0 overflow-x-scroll">
+    <div class="flex-[2] shrink-0 overflow-x-scroll border-l">
         <!-- days row -->
         <table class="bg-white rounded-r-md text-xs border-l">
             <thead>
                 <tr class="border-b h-[33px]">
-                    <th v-for="day in arrOfDays" :key="day.id" class="whitespace-nowrap border-r min-w-[80px] px-2">
-                        {{ format(new Date(day), "dd-MMM") }}
+                    <th
+                        v-for="day in arrOfDays"
+                        :key="day.id"
+                        class="whitespace-nowrap border-r min-w-[80px] px-2"
+                        :class="day.isWeekends ? 'bg-slate-100' : ''"
+                    >
+                        {{ format(new Date(day.date), "dd-MMM") }}
                     </th>
                 </tr>
             </thead>
@@ -32,6 +37,7 @@
             <GantLine :item="item" :projectList="projectList" />
         </div>
     </div>
+
     <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
         <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
     </div>
@@ -39,17 +45,18 @@
 
 <script setup>
     import { computed, ref } from "vue";
-    import data from "../../../data/auditor.json";
     import { storeToRefs } from "pinia";
     import { format } from "date-fns";
     import { days, getAmountDay } from "../../../utils/Days";
     import GantLine from "./GantLine.vue";
     import { useDateRangeStore } from "../../../store/DateRange";
+    import { useProjectListStore } from "../../../store/project";
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
-    const projectList = ref(data);
+    const { projectList: list } = useProjectListStore();
+    const projectList = ref(list);
 
     // create arr of days
     const arrOfDays = computed(() => {

@@ -5,21 +5,27 @@
             <n-form-item label="Company name" label-style="font-weight: 600" path="name">
                 <n-input v-model:value="formValue.name" placeholder="Company name" />
             </n-form-item>
+
             <n-form-item label="Email" label-style="font-weight: 600" path="email">
                 <n-input v-model:value="formValue.email" placeholder="Email" />
             </n-form-item>
+
             <n-form-item label="Address" label-style="font-weight: 600" path="address">
                 <n-input v-model:value="formValue.address" placeholder="Address" />
             </n-form-item>
+
             <n-form-item label="Phone" label-style="font-weight: 600" path="phone">
                 <n-input v-model:value="formValue.phone" placeholder="Phone" />
             </n-form-item>
+
             <n-form-item label="Contact First Name" label-style="font-weight: 600" path="contactFirstName">
                 <n-input v-model:value="formValue.contactFirstName" placeholder="Contact First Name" />
             </n-form-item>
+
             <n-form-item label="Contact Last Name" label-style="font-weight: 600" path="contactLastName">
                 <n-input v-model:value="formValue.contactLastName" placeholder="Contact Last Name" />
             </n-form-item>
+
             <n-form-item class="!flex !justify-center col-span-2">
                 <n-button type="primary" class="!px-12" @click="handleSubmit"> Add </n-button>
             </n-form-item>

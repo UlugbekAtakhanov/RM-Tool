@@ -42,7 +42,12 @@
                     @keydown.enter.prevent
                     update-value-on-close
                     :actions="null"
+                    class="w-full"
                 />
+            </n-form-item>
+
+            <n-form-item label="Color" label-style="font-weight: 600" path="color">
+                <n-color-picker v-model:value="formValue.color" :actions="['clear']" />
             </n-form-item>
 
             <n-form-item class="!flex !justify-center col-span-2">
@@ -71,6 +76,7 @@
         manager: "",
         team: [],
         range: null,
+        color: "",
     });
 
     const options = [
@@ -107,7 +113,7 @@
         },
         company: {
             required: true,
-            message: "Please provide a company.",
+            message: "Please provide a company name.",
             trigger: ["blur", "input"],
         },
         partner: {
@@ -122,14 +128,13 @@
         },
         manager: {
             required: true,
-            message: "Please provide a manager.",
+            message: "Please provide a manager name.",
             trigger: ["blur", "input"],
         },
         team: {
             required: true,
             validator(rule, value) {
-                console.log(rule);
-                if (!value) {
+                if (!value.length) {
                     return new Error("Choose team members.");
                 }
                 return true;
@@ -141,6 +146,16 @@
             validator(rule, value) {
                 if (!value) {
                     return new Error("Choose range of date.");
+                }
+                return true;
+            },
+            trigger: ["blur", "input"],
+        },
+        color: {
+            required: true,
+            validator(rule, value) {
+                if (!value) {
+                    return new Error("Choose color for project.");
                 }
                 return true;
             },

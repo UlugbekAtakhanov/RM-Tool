@@ -1,4 +1,4 @@
-import { parse } from "date-fns";
+import { isWeekend, parse } from "date-fns";
 
 // list of dates
 export const days = (start, end) => {
@@ -13,8 +13,8 @@ export const days = (start, end) => {
 
     const newArr = arr.map((item) => {
         const parsedDate = parse(item, "EEE MMM dd yyyy", new Date());
-        const formattedDate = parsedDate;
-        return formattedDate;
+        const isWeekends = isWeekend(parsedDate);
+        return { date: parsedDate, isWeekends };
     });
     return newArr;
 };

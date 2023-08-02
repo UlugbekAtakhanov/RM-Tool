@@ -1,6 +1,6 @@
 <template>
     <h1 class="text-2xl font-semibold text-center p-4">RM Tool</h1>
-    <div class="px-4">
+    <div>
         <DatePicker />
         <div class="flex items-start">
             <TableLeft />
