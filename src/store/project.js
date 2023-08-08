@@ -2,6 +2,35 @@ import { defineStore } from "pinia";
 
 export const useProjectListStore = defineStore("project-list", {
     state: () => ({
+        projectList1: [
+            {
+                id: 1,
+                title: "Project1",
+                ye: "31Dec",
+                scope: "A+R",
+                manager: "Julia",
+                team: ["Sevara", "Bimple"],
+                phase: { id: 2, color: "red", from: "July 11, 2023", to: "July 14, 2023", duration: 3 },
+            },
+            {
+                id: 2,
+                title: "Project2",
+                ye: "31Dec",
+                scope: "A",
+                manager: "Kanza",
+                team: ["Jing"],
+                phase: { id: 3, color: "yellow", from: "July 15, 2023", to: "July 20, 2023", duration: 13 },
+            },
+            {
+                id: 3,
+                title: "Project3",
+                ye: "31Dec",
+                scope: "A+R",
+                manager: "Kent",
+                team: ["Nan"],
+                phase: { id: 5, color: "cyan", from: "July 10, 2023", to: "July 16, 2023", duration: 9 },
+            },
+        ],
         projectList: [
             {
                 id: 1,

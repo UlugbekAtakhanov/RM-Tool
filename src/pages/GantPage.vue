@@ -4,7 +4,7 @@
         <DatePicker />
         <div class="flex items-start">
             <TableLeft />
-            <TableRight />
+            <TableRight1 />
         </div>
     </div>
 </template>
@@ -12,7 +12,7 @@
 <script setup>
     import DatePicker from "../components/gant-page/DatePicker.vue";
     import TableLeft from "../components/gant-page/table/TableLeft.vue";
-    import TableRight from "../components/gant-page/table/TableRight.vue";
+    import TableRight1 from "../components/gant-page/table/TableRight1.vue";
     import { useDateRangeStore } from "../store/DateRange";
 
     const dateRangeStore = useDateRangeStore();
