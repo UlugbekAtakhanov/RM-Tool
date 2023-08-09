@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-[2] shrink-0 overflow-x-scroll border-l">
+    <div class="flex-[2] shrink-0 overflow-x-scroll">
         <!-- days row -->
         <table class="bg-white rounded-r-md text-xs border-l">
             <thead>
@@ -34,13 +34,13 @@
                 class="w-[80px] text-xs border-l"
                 :projectList="projectList"
             ></div>
-            <GantLine :item="item" :projectList="projectList" />
+            <GantLine2 :item="item" :projectList="projectList" />
         </div>
     </div>
 
-    <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
+    <!-- <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
         <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
@@ -48,14 +48,14 @@
     import { storeToRefs } from "pinia";
     import { format } from "date-fns";
     import { days, getAmountDay } from "../../../utils/Days";
-    import GantLine from "./GantLine.vue";
     import { useDateRangeStore } from "../../../store/DateRange";
     import { useProjectListStore } from "../../../store/project";
+    import GantLine2 from "./GantLine2.vue";
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
-    const { projectList: list } = useProjectListStore();
+    const { projectList1: list } = useProjectListStore();
     const projectList = ref(list);
 
     // create arr of days
@@ -68,59 +68,35 @@
     // modify project list giving new keys - startPoint, duration
     const projectListComputed = computed(() => {
         const newList = projectList.value.map((project) => {
-            const newPhase = project.phase.map((item) => {
-                return {
-                    ...item,
-                    startPoint: (new Date(item.from) - new Date(startDate.value)) / getAmountDay(1),
-                    duration: (new Date(item.to) - new Date(item.from)) / getAmountDay(1),
-                };
-            });
+            const newPhase = {
+                ...project.phase,
+                startPoint: (new Date(project.phase.from) - new Date(startDate.value)) / getAmountDay(1),
+                duration: (new Date(project.phase.to) - new Date(project.phase.from)) / getAmountDay(1),
+            };
             return { ...project, phase: newPhase };
         });
         return newList;
     });
 
     // on drop effect
-    const onDrop = (e, phases, parentIndex) => {
-        const itemId = parseInt(e.dataTransfer.getData("itemId"));
-        let el = phases.find((item) => item.id === itemId);
-        const moveCell = parseInt(e.target.dataset.index);
-        const prevStartPoint = el.startPoint;
+    const onDrop = (e, el) => {
+        const end = e.target.getBoundingClientRect().x;
+        const start = parseInt(e.dataTransfer.getData("startPoint"));
 
-        if (prevStartPoint < moveCell) {
-            el.startPoint = moveCell - el.duration + 1;
-            el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-            el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-        } else {
-            el.startPoint = parseInt(moveCell);
-            el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-            el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
+        const width = parseInt(e.dataTransfer.getData("width"));
+
+        const parentId = parseInt(e.dataTransfer.getData("parentId"));
+        const parentIndex = projectList.value.findIndex((item) => item.id === parentId);
+
+        const diff = Math.round((end - start) / 80 - parseInt(width / 80 / 2));
+
+        el.startPoint = el.startPoint + diff;
+        el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(diff)), "MMM dd, yyyy");
+        el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(diff)), "MMM dd, yyyy");
+
+        if (el) {
+            const { startPoint, ...rest } = el;
+            projectList.value[parentIndex].phase = rest;
         }
-
-        const { startPoint, ...rest } = el;
-        const mutatingElementIndex = projectList.value[parentIndex].phase.findIndex((item) => item.id === itemId);
-        projectList.value[parentIndex].phase[mutatingElementIndex] = rest;
     };
 </script>
-
-<style scoped>
-    ::-webkit-scrollbar {
-        height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-        cursor: pointer;
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: lightgray;
-        border-radius: 30px;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: lightgray;
-        width: 70%;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: gray;
-    }
-   
-</style>
