@@ -100,3 +100,24 @@
         }
     };
 </script>
+
+<style scoped>
+    ::-webkit-scrollbar {
+        height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        cursor: pointer;
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: lightgray;
+        border-radius: 30px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: lightgray;
+        width: 70%;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: gray;
+    }
+</style>

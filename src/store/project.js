@@ -19,7 +19,7 @@ export const useProjectListStore = defineStore("project-list", {
                 scope: "A",
                 manager: "Kanza",
                 team: ["Jing"],
-                phase: { id: 3, color: "yellow", from: "July 15, 2023", to: "July 20, 2023", duration: 13 },
+                phase: { id: 3, color: "yellow", from: "July 15, 2023", to: "July 20, 2023", duration: 5 },
             },
             {
                 id: 3,
@@ -28,7 +28,7 @@ export const useProjectListStore = defineStore("project-list", {
                 scope: "A+R",
                 manager: "Kent",
                 team: ["Nan"],
-                phase: { id: 5, color: "cyan", from: "July 10, 2023", to: "July 16, 2023", duration: 9 },
+                phase: { id: 5, color: "cyan", from: "July 10, 2023", to: "July 16, 2023", duration: 6 },
             },
         ],
         projectList: [
