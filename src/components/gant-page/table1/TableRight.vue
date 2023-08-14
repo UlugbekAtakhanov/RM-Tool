@@ -34,7 +34,7 @@
                 class="w-[80px] text-xs border-l"
                 :projectList="projectList"
             ></div>
-            <GantLine2 :item="item" :projectList="projectList" />
+            <GantLine :item="item" :projectList="projectList" />
         </div>
     </div>
 
@@ -50,7 +50,7 @@
     import { days, getAmountDay } from "../../../utils/Days";
     import { useDateRangeStore } from "../../../store/DateRange";
     import { useProjectListStore } from "../../../store/project";
-    import GantLine2 from "./GantLine2.vue";
+    import GantLine from "./GantLine.vue";
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);

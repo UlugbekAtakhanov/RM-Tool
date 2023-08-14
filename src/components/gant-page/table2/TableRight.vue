@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-[2] shrink-0 overflow-x-scroll border-l">
+    <div class="flex-[2] shrink-0 overflow-x-scroll">
         <!-- days row -->
         <table class="bg-white rounded-r-md text-xs border-l">
             <thead>
@@ -20,17 +20,27 @@
         <div
             v-for="(item, parentIndex) in projectListComputed"
             :key="parentIndex"
-            class="bg-white h-[33px] !relative flex overflow-hidden"
+            class="bg-white h-[33px] relative flex overflow-hidden"
             :style="{ width: arrOfDays.length * 80 + 'px' }"
         >
-            <div v-for="(_, index) in arrOfDays" :data-index="index" :key="index" class="w-[80px] text-xs border-l shrink-0"></div>
-            <GantLine1 :item="item" :projectList="projectList" />
+            <!-- drop zone -->
+            <div
+                @drop="(e) => onDrop(e, item, parentIndex)"
+                @dragenter.prevent
+                @dragover.prevent
+                v-for="(_, index) in arrOfDays"
+                :data-index="index"
+                :key="index"
+                class="w-[80px] text-xs border-l"
+                :projectList="projectList"
+            ></div>
+            <GantLine :item="item" :projectList="projectList" />
         </div>
     </div>
 
-    <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
+    <!-- <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
         <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
@@ -40,12 +50,12 @@
     import { days, getAmountDay } from "../../../utils/Days";
     import { useDateRangeStore } from "../../../store/DateRange";
     import { useProjectListStore } from "../../../store/project";
-    import GantLine1 from "./GantLine1.vue";
+    import GantLine from "./GantLine.vue";
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
-    const { projectList1: list } = useProjectListStore();
+    const { projectList2: list } = useProjectListStore();
     const projectList = ref(list);
 
     // create arr of days
@@ -58,15 +68,37 @@
     // modify project list giving new keys - startPoint, duration
     const projectListComputed = computed(() => {
         const newList = projectList.value.map((project) => {
-            const newPhase = {
-                ...project.phase,
-                startPoint: (new Date(project.phase.from) - new Date(startDate.value)) / getAmountDay(1),
-                duration: (new Date(project.phase.to) - new Date(project.phase.from)) / getAmountDay(1),
+            const newObj = {
+                ...project,
+                startPoint: (new Date(project.from) - new Date(startDate.value)) / getAmountDay(1),
+                duration: (new Date(project.to) - new Date(project.from)) / getAmountDay(1),
             };
-            return { ...project, phase: newPhase };
+            return newObj;
         });
         return newList;
     });
+
+    // on drop effect
+    const onDrop = (e, el) => {
+        const end = e.target.getBoundingClientRect().x;
+        const start = parseInt(e.dataTransfer.getData("startPoint"));
+
+        const width = parseInt(e.dataTransfer.getData("width"));
+
+        const parentId = parseInt(e.dataTransfer.getData("parentId"));
+        const parentIndex = projectList.value.findIndex((item) => item.id === parentId);
+
+        const diff = Math.round((end - start) / 80 - parseInt(width / 80 / 2));
+
+        el.startPoint = el.startPoint + diff;
+        el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(diff)), "MMM dd, yyyy");
+        el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(diff)), "MMM dd, yyyy");
+
+        if (el) {
+            const { startPoint, ...rest } = el;
+            projectList.value[parentIndex] = rest;
+        }
+    };
 </script>
 
 <style scoped>

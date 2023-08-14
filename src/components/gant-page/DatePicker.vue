@@ -1,36 +1,20 @@
 <template>
-    <div class="w-[300px] ml-auto mb-2">
-        <VueTailwindDatepicker
-            placeholder="from ... to ..."
-            :formatter="formatter"
-            separator=" - "
-            overlay
-            v-model="dateValue"
-            class="font-semibold text-xs"
-        />
+    <div class="w-[300px]">
+        <n-date-picker v-model:value="dateValue" update-value-on-close type="daterange" :format="format" />
     </div>
 </template>
 
 <script setup>
     import { ref, watch } from "vue";
-    import VueTailwindDatepicker from "vue-tailwind-datepicker";
     import { storeToRefs } from "pinia";
     import { useDateRangeStore } from "../../store/DateRange";
 
+    const format = "MMM dd, yyyy";
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
-
-    const dateValue = ref({
-        startDate: startDate.value,
-        endDate: endDate.value,
-    });
+    const dateValue = ref([startDate.value, endDate.value]);
 
     watch(dateValue, () => {
-        dateRangeStore.updateDateRange(dateValue.value);
-    });
-
-    const formatter = ref({
-        date: "DD MMM YYYY",
-        month: "MMM",
+        dateRangeStore.updateDateRange({ startDate: dateValue.value[0], endDate: dateValue.value[1] });
     });
 </script>

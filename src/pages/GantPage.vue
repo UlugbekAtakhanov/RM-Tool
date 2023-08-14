@@ -1,21 +1,23 @@
 <template>
-    <h1 class="text-2xl font-semibold text-center p-4">RM Tool</h1>
+    <h1 class="text-2xl font-semibold text-center p-4 text-primary rounded-md">Projects</h1>
     <div>
-        <DatePicker />
+        <div class="flex justify-between items-end mb-2 px-2">
+            <Modal buttonTitle="Add project">
+                <AddNewProjectForm />
+            </Modal>
+            <DatePicker />
+        </div>
         <div class="flex items-start">
             <TableLeft />
-            <TableRight2 />
+            <TableRight />
         </div>
     </div>
 </template>
 
 <script setup>
     import DatePicker from "../components/gant-page/DatePicker.vue";
-    import TableLeft from "../components/gant-page/table/TableLeft.vue";
-    import TableRight1 from "../components/gant-page/table/TableRight1.vue";
-import TableRight2 from "../components/gant-page/table/TableRight2.vue";
-    import { useDateRangeStore } from "../store/DateRange";
-
-    const dateRangeStore = useDateRangeStore();
-    dateRangeStore.initialDateRange();
+    import TableLeft from "../components/gant-page/table2/TableLeft.vue";
+    import TableRight from "../components/gant-page/table2/TableRight.vue";
+    import Modal from "../components/Modal.vue";
+    import AddNewProjectForm from "../components/forms-page/AddNewProjectForm.vue";
 </script>

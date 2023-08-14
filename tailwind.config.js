@@ -1,14 +1,12 @@
-const colors = require("tailwindcss/colors");
-
-module.exports = {
-    content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}", "./node_modules/vue-tailwind-datepicker/**/*.js"],
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
     theme: {
         extend: {
             colors: {
-                "vtd-primary": colors.sky,
-                "vtd-secondary": colors.gray,
+                primary: "#672CC7",
             },
         },
     },
-    plugins: [require("@tailwindcss/forms")],
+    plugins: [],
 };

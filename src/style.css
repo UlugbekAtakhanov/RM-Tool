@@ -3,8 +3,31 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-sky-100
-  }
+    body {
+        @apply bg-[#F3F4F6]
+    }
 }
 
+::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    cursor: pointer;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: lightgray;
+    border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: lightgray;
+    width: 70%;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}

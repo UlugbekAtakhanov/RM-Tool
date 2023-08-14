@@ -1,5 +1,5 @@
 {
-  "name": "rm-tool",
+  "name": "rm-tool-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,23 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^0.7.0",
-    "@vueuse/components": "^10.3.0",
-    "@vueuse/core": "^10.2.1",
+    "@tanstack/vue-query": "^4.32.6",
+    "@vicons/ionicons5": "^0.12.0",
+    "axios": "^1.4.0",
     "date-fns": "^2.30.0",
-    "dayjs": "^1.11.9",
-    "el-table-draggable": "^1.4.12",
     "pinia": "^2.1.6",
-    "v-drag": "^3.0.9",
     "vue": "^3.3.4",
-    "vue-dndrop": "^1.3.1",
-    "vue-resizable": "^2.1.7",
-    "vue-router": "4",
-    "vue-tailwind-datepicker": "^1.4.5",
-    "vuedraggable": "^4.1.0"
+    "vue-router": "4"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.4",
     "@vitejs/plugin-vue": "^4.2.3",
     "autoprefixer": "^10.4.14",
     "naive-ui": "^2.34.4",

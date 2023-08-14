@@ -1,9 +1,13 @@
 <template>
-    <div class="bg-white w-2/3 mx-auto mt-20 rounded-lg border border-sky-100 shadow p-4">
-        <h1 class="text-2xl text-center font-semibold mb-8">Add a new project</h1>
+    <div class="bg-white mx-auto rounded-lg">
+        <h1 class="text-2xl text-center font-semibold mb-8">Add new project</h1>
         <n-form ref="formRef" :label-width="80" :model="formValue" :rules="rules" size="medium" class="grid grid-cols-2 gap-x-4">
             <n-form-item label="Project name" label-style="font-weight: 600" path="name">
                 <n-input v-model:value="formValue.name" placeholder="Project name" />
+            </n-form-item>
+
+            <n-form-item label="Project type" label-style="font-weight: 600" path="type">
+                <n-select type="select" v-model:value="formValue.company" :options="projectTypeOptions" />
             </n-form-item>
 
             <n-form-item label="Fiscal Year" label-style="font-weight: 600" path="fiscalYear">
@@ -11,23 +15,23 @@
             </n-form-item>
 
             <n-form-item label="Company " label-style="font-weight: 600" path="company">
-                <n-input v-model:value="formValue.company" placeholder="Company " />
+                <n-select type="select" v-model:value="formValue.company" :options="companyOptions" />
             </n-form-item>
 
             <n-form-item label="Partner " label-style="font-weight: 600" path="partner">
-                <n-input v-model:value="formValue.partner" placeholder="Partner " />
+                <n-select type="select" v-model:value="formValue.partner" :options="companyOptions" />
             </n-form-item>
 
             <n-form-item label="Quality Review Partner (QRP) " label-style="font-weight: 600" path="qrp">
-                <n-input v-model:value="formValue.qrp" placeholder="Quality Review Partner (QRP) " />
+                <n-select type="select" v-model:value="formValue.qrp" :options="companyOptions" />
             </n-form-item>
 
             <n-form-item label="Director " label-style="font-weight: 600" path="director">
-                <n-input v-model:value="formValue.director" placeholder="Director " />
+                <n-select type="select" v-model:value="formValue.director" :options="companyOptions" />
             </n-form-item>
 
             <n-form-item label="Manager " label-style="font-weight: 600" path="manager">
-                <n-input v-model:value="formValue.manager" placeholder="Manager " />
+                <n-select type="select" v-model:value="formValue.manager" :options="companyOptions" />
             </n-form-item>
 
             <n-form-item label="Team " label-style="font-weight: 600" path="team">
@@ -55,26 +59,28 @@
             </n-form-item>
         </n-form>
     </div>
-    <div class="flex justify-center">
+    <!-- <div class="flex justify-center fixed top-0 left-0 bg-white">
         <pre>{{ JSON.stringify(formValue, null, 2) }}</pre>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
     import { ref } from "vue";
     import { useMessage } from "naive-ui";
+    import { millisecondToDay } from "../../utils/Days";
 
     const formRef = ref(null);
     const message = useMessage();
     const formValue = ref({
         name: "",
+        type: "",
         fiscalYear: null,
         company: "",
         partner: "",
         qrp: "",
         director: "",
         manager: "",
-        team: [],
+        team: [], // this may cause trouble
         range: null,
         color: "",
     });
@@ -95,10 +101,42 @@
         },
     ];
 
+    const projectTypeOptions = [
+        {
+            label: "Audit",
+            value: "audit",
+        },
+        {
+            label: "Review",
+            value: "review",
+        },
+    ];
+
+    const companyOptions = [
+        {
+            label: "Company1",
+            value: "song0",
+            disabled: true,
+        },
+        {
+            label: "Company2",
+            value: "song1",
+        },
+        {
+            label: "Company3",
+            value: "song2",
+        },
+    ];
+
     const rules = {
         name: {
             required: true,
             message: "Please provide a project name.",
+            trigger: ["blur", "input"],
+        },
+        type: {
+            required: true,
+            message: "Please provide a project type.",
             trigger: ["blur", "input"],
         },
         fiscalYear: {
@@ -113,7 +151,7 @@
         },
         company: {
             required: true,
-            message: "Please provide a company name.",
+            message: "Choose a company.",
             trigger: ["blur", "input"],
         },
         partner: {
@@ -167,6 +205,11 @@
         e.preventDefault();
         formRef.value?.validate((errors) => {
             if (!errors) {
+                const from = formValue.value.range[0];
+                const to = formValue.value.range[1];
+                const duration = millisecondToDay(to) - millisecondToDay(from);
+                const data = { ...formValue.value, range: { from, to, duration } };
+                console.log(data);
                 message.success("Submitted successfully!");
             } else {
                 console.log(errors);

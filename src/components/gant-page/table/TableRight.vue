@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-[2] shrink-0 overflow-x-scroll border-l">
+    <div class="flex-[2] shrink-0 overflow-x-scroll">
         <!-- days row -->
         <table class="bg-white rounded-r-md text-xs border-l">
             <thead>
@@ -38,9 +38,9 @@
         </div>
     </div>
 
-    <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
+    <!-- <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
         <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
@@ -102,25 +102,3 @@
         projectList.value[parentIndex].phase[mutatingElementIndex] = rest;
     };
 </script>
-
-<style scoped>
-    ::-webkit-scrollbar {
-        height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-        cursor: pointer;
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: lightgray;
-        border-radius: 30px;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: lightgray;
-        width: 70%;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: gray;
-    }
-   
-</style>

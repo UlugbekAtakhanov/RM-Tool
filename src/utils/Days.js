@@ -21,3 +21,6 @@ export const days = (start, end) => {
 
 //  days in milliseconds
 export const getAmountDay = (n) => 1000 * 60 * 60 * 24 * n;
+
+// milliseconds in days
+export const millisecondToDay = (ml) => ml / (1000 * 60 * 60 * 24);
