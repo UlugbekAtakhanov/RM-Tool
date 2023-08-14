@@ -15,9 +15,9 @@
 </template>
 
 <script setup>
-    import DatePicker from "../components/gant-page/DatePicker.vue";
     import TableLeft from "../components/gant-page/table2/TableLeft.vue";
     import TableRight from "../components/gant-page/table2/TableRight.vue";
     import Modal from "../components/Modal.vue";
     import AddNewProjectForm from "../components/forms-page/AddNewProjectForm.vue";
+    import DatePicker from "../components/gant-page/DatePicker.vue";
 </script>

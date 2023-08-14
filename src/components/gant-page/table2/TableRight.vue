@@ -48,8 +48,8 @@
     import { storeToRefs } from "pinia";
     import { format } from "date-fns";
     import { days, getAmountDay } from "../../../utils/Days";
-    import { useDateRangeStore } from "../../../store/DateRange";
-    import { useProjectListStore } from "../../../store/project";
+    import { useDateRangeStore } from "../../../store/dateRangeStore";
+    import { useProjectListStore } from "../../../store/projectStore";
     import GantLine from "./GantLine.vue";
 
     const dateRangeStore = useDateRangeStore();

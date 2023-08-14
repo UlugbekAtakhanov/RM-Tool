@@ -7,7 +7,7 @@
 <script setup>
     import { ref, watch } from "vue";
     import { storeToRefs } from "pinia";
-    import { useDateRangeStore } from "../../store/DateRange";
+    import { useDateRangeStore } from "../../store/dateRangeStore";
 
     const format = "MMM dd, yyyy";
     const dateRangeStore = useDateRangeStore();

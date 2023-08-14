@@ -29,6 +29,7 @@
         PersonAddOutline,
         HomeOutline,
         BarChartOutline,
+        LeafOutline,
         BookOutline as BookIcon,
         PersonOutline as PersonIcon,
         WineOutline as WineIcon,
@@ -67,6 +68,20 @@
                 ),
             key: "gant-chart",
             icon: renderIcon(BarChartOutline),
+        },
+        {
+            label: () =>
+                h(
+                    RouterLink,
+                    {
+                        to: {
+                            name: "companies",
+                        },
+                    },
+                    { default: () => "Companies" }
+                ),
+            key: "companies",
+            icon: renderIcon(LeafOutline),
         },
         {
             label: () =>

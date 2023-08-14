@@ -67,9 +67,14 @@
 <script setup>
     import { ref } from "vue";
     import { useMessage } from "naive-ui";
+    import { useUserStore } from "../../store/userStore";
+    import { storeToRefs } from "pinia";
+
+    const userStore = useUserStore();
+    const { user } = storeToRefs(userStore);
 
     // assuming
-    const userStatus = ref("admin");
+    const userStatus = ref(user.value);
 
     const formRef = ref(null);
     const message = useMessage();

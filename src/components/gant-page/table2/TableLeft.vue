@@ -39,7 +39,7 @@
 
 <script setup>
     import { ref } from "vue";
-    import { useProjectListStore } from "../../../store/project";
+    import { useProjectListStore } from "../../../store/projectStore";
     const { projectList: list } = useProjectListStore();
     const projectList = ref(list);
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white w-2/3 mx-auto mt-20 rounded-lg border border-sky-100 shadow p-4">
+    <div class="p-4">
         <h1 class="text-2xl text-center font-semibold mb-8">Add a new company</h1>
         <n-form ref="formRef" :label-width="80" :model="formValue" :rules="rules" size="medium" class="grid grid-cols-2 gap-x-4">
             <n-form-item label="Company name" label-style="font-weight: 600" path="name">
@@ -31,9 +31,9 @@
             </n-form-item>
         </n-form>
     </div>
-    <div class="flex justify-center">
+    <!-- <div class="flex justify-center">
         <pre>{{ JSON.stringify(formValue, null, 2) }}</pre>
-    </div>
+    </div> -->
 </template>
 
 <script setup>

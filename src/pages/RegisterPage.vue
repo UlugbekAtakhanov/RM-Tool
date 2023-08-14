@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- img -->
                 <div>
-                    <img src="../assets/rm314-adj-101.png" alt="" />
+                    <img src="../assets/rm314-adj-10 1.png" alt="" />
                 </div>
 
                 <!-- form -->
