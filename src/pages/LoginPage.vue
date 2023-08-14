@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- img -->
                 <div class="flex-1">
-                    <img src="../assets/rm314-adj-10 1.png" alt="img" class="h-full" />
+                    <img src="../assets/rm314-adj-101.png" alt="img" class="h-full" />
                 </div>
                 <!-- form -->
                 <n-form ref="formRef" :label-width="80" :model="formValue" :rules="rules" size="medium" class="flex-1 p-[28px]">
