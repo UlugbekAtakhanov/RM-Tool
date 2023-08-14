@@ -7,6 +7,7 @@
         class="hover:!bg-primary hover:!text-white"
         icon-placement="right"
         :render-icon="addIcon"
+        :disabled="disabledState"
     >
         {{ buttonTitle }}
     </n-button>
@@ -22,7 +23,7 @@
     import { NIcon } from "naive-ui";
     import { AddOutline } from "@vicons/ionicons5";
 
-    const { buttonTitle } = defineProps({ buttonTitle: String });
+    const { buttonTitle, disabledState } = defineProps({ buttonTitle: String, disabledState: Boolean });
 
     const addIcon = () => {
         return h(NIcon, null, {

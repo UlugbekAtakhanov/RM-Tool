@@ -140,12 +140,12 @@
 
     const roleOptions = [
         {
-            label: "Super Admin",
+            label: "PKF Admin",
             value: "super-admin",
             disabled: !["super-super-admin"].includes(userStatus.value),
         },
         {
-            label: "Admin",
+            label: "Client Admin",
             value: "admin",
             disabled: !["super-super-admin", "super-admin"].includes(userStatus.value),
         },
@@ -181,29 +181,6 @@
         {
             label: "Key Staff",
             value: "key-staff",
-        },
-        {
-            label: "Staff",
-            value: "staff",
-        },
-    ];
-
-    const userStatusOptions = [
-        {
-            label: "Super Super Admin",
-            value: "super-super-admin",
-        },
-        {
-            label: "Super Admin",
-            value: "super-admin",
-        },
-        {
-            label: "Admin",
-            value: "admin",
-        },
-        {
-            label: "RM",
-            value: "rm",
         },
         {
             label: "Staff",
