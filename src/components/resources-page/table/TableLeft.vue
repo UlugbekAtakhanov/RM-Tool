@@ -36,7 +36,7 @@
 <script setup>
     import { ref } from "vue";
     import { useProjectListStore } from "../../../store/projectStore";
-    const { projectList: list } = useProjectListStore();
+    const { resourceList: list } = useProjectListStore();
     const projectList = ref(list);
 
     const isOpen = ref(false);

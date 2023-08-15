@@ -27,13 +27,7 @@
             <!-- @drop="(e) => onDrop(e, item.phase, parentIndex)"
             @dragenter.prevent
             @dragover.prevent -->
-            <div
-                v-for="(_, index) in arrOfDays"
-                :data-index="index"
-                :key="index"
-                class="w-[80px] text-xs border-l"
-                :projectList="projectList"
-            ></div>
+            <div v-for="(_, index) in arrOfDays" :data-index="index" :key="index" class="w-[80px] text-xs border-l" :projectList="projectList"></div>
             <GantLine :item="item" :projectList="projectList" />
         </div>
     </div>
@@ -55,7 +49,7 @@
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
-    const { projectList: list } = useProjectListStore();
+    const { resourceList: list } = useProjectListStore();
     const projectList = ref(list);
 
     // create arr of days

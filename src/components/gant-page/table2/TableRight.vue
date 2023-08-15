@@ -55,7 +55,7 @@
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
-    const { projectList2: list } = useProjectListStore();
+    const { projectList: list } = useProjectListStore();
     const projectList = ref(list);
 
     // create arr of days
