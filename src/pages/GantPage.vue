@@ -2,7 +2,7 @@
     <h1 class="text-2xl font-semibold text-center p-4 text-primary rounded-md">Projects</h1>
     <div>
         <div class="flex justify-between items-end mb-2 px-2">
-            <Modal buttonTitle="Add project" :disabledState="['super-super-admin', 'super-admin', 'rm'].includes(user)">
+            <Modal buttonTitle="Add project" :disabledState="['super-super-admin', 'super-admin', 'admin'].includes(user)">
                 <AddNewProjectForm />
             </Modal>
             <DatePicker />

@@ -24,9 +24,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in projectList" :key="item.id" class="hover:bg-sky-50 border-b text-center h-[33px]">
+                <tr
+                    v-for="(item, index) in projectList"
+                    :key="item.id"
+                    :id="item.id"
+                    @contextmenu="(e) => handleContextMenu(e, item)"
+                    class="hover:bg-sky-50 border-b text-center h-[33px]"
+                >
                     <td class="text-xs">{{ index + 1 }}</td>
-                    <td class="text-left w-[150px]">{{ item.title }}</td>
+                    <td class="text-left w-[150px]" :id="item.id">{{ item.title }}</td>
                     <td>{{ item.ye }}</td>
                     <td>{{ item.scope }}</td>
                     <td>{{ item.manager }}</td>
@@ -34,14 +40,50 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- right clicked dropdown  -->
+        <ProjectRightClickDropDown @onClickoutside="onClickoutside" @handleSelect="handleSelect" :showDropdown="showDropdown" :x="x" :y="y" />
     </div>
 </template>
 
 <script setup>
-    import { ref } from "vue";
+    import { ref, nextTick } from "vue";
     import { useProjectListStore } from "../../../store/projectStore";
+    import ProjectRightClickDropDown from "../../dropdowns/ProjectRightClickDropDown.vue";
+    import { useMessage } from "naive-ui";
+
+    const message = useMessage();
+
     const { projectList: list } = useProjectListStore();
     const projectList = ref(list);
+    const isOpen = ref(true);
 
-    const isOpen = ref(false);
+    const showDropdownRef = ref(false);
+    const xRef = ref(0);
+    const yRef = ref(0);
+
+    const showDropdown = showDropdownRef;
+    const x = xRef;
+    const y = yRef;
+
+    const handleContextMenu = (e, item) => {
+        e.preventDefault();
+        showDropdownRef.value = false;
+        if (parseInt(e.target.parentElement.id) === item.id) {
+            nextTick().then(() => {
+                showDropdownRef.value = true;
+                xRef.value = e.clientX;
+                yRef.value = e.clientY;
+            });
+        }
+    };
+
+    const onClickoutside = (e) => {
+        message.info("clickoutside");
+        showDropdownRef.value = false;
+    };
+
+    const handleSelect = (key) => {
+        showDropdownRef.value = false;
+    };
 </script>

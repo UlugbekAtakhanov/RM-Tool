@@ -12,7 +12,14 @@
                 @expand="collapsed = false"
             >
                 <div class="h-full overflow-y-scroll">
-                    <n-menu v-model:value="activeKey" :collapsed="collapsed" :collapsed-width="40" :collapsed-icon-size="18" :options="menuOptions" />
+                    <n-menu
+                        :indent="18"
+                        v-model:value="activeKey"
+                        :collapsed="collapsed"
+                        :collapsed-width="40"
+                        :collapsed-icon-size="18"
+                        :options="menuOptions"
+                    />
                 </div>
             </n-layout-sider>
             <n-layout class="">
@@ -23,24 +30,29 @@
 </template>
 
 <script setup>
-    import { h, ref } from "vue";
+    import { computed, h, ref } from "vue";
     import { NIcon } from "naive-ui";
     import {
-        PersonAddOutline,
         HomeOutline,
         BarChartOutline,
-        LeafOutline,
         BookOutline as BookIcon,
         PersonOutline as PersonIcon,
         WineOutline as WineIcon,
+        FolderOpenOutline,
+        PeopleOutline,
     } from "@vicons/ionicons5";
     import { RouterLink } from "vue-router";
+    import { useUserStore } from "../store/userStore";
+    import { storeToRefs } from "pinia";
+
+    const userStore = useUserStore();
+    const { user } = storeToRefs(userStore);
 
     function renderIcon(icon) {
         return () => h(NIcon, null, { default: () => h(icon) });
     }
 
-    const menuOptions = [
+    const menuOptions = computed(() => [
         {
             label: () =>
                 h(
@@ -50,9 +62,9 @@
                             name: "home",
                         },
                     },
-                    { default: () => "Home" }
+                    { default: () => "Dashboard" }
                 ),
-            key: "home",
+            key: "dashboard",
             icon: renderIcon(HomeOutline),
         },
         {
@@ -64,9 +76,10 @@
                             name: "gant-chart",
                         },
                     },
-                    { default: () => "Dashboard" }
+                    { default: () => "Projects" }
                 ),
-            key: "gant-chart",
+            key: "projects",
+            show: !["super-super-admin", "super-admin", "admin"].includes(user.value),
             icon: renderIcon(BarChartOutline),
         },
         {
@@ -81,21 +94,41 @@
                     { default: () => "Companies" }
                 ),
             key: "companies",
-            icon: renderIcon(LeafOutline),
+            icon: renderIcon(FolderOpenOutline),
         },
         {
-            label: () =>
-                h(
-                    RouterLink,
-                    {
-                        to: {
-                            name: "users",
-                        },
-                    },
-                    { default: () => "Users" }
-                ),
-            key: "users",
-            icon: renderIcon(PersonAddOutline),
+            label: "User management",
+            key: "user-management",
+            icon: renderIcon(PeopleOutline),
+            children: [
+                {
+                    label: () =>
+                        h(
+                            RouterLink,
+                            {
+                                to: {
+                                    name: "users",
+                                },
+                            },
+                            { default: () => "Users" }
+                        ),
+                    key: "users",
+                },
+                {
+                    label: () =>
+                        h(
+                            RouterLink,
+                            {
+                                to: {
+                                    name: "resources",
+                                },
+                            },
+                            { default: () => "Resources" }
+                        ),
+                    show: !["super-super-admin", "super-admin", "admin"].includes(user.value),
+                    key: "resources",
+                },
+            ],
         },
         {
             label: "Sth else",
@@ -177,7 +210,7 @@
                 },
             ],
         },
-    ];
+    ]);
 
     const activeKey = ref(null);
     const collapsed = ref(true);

@@ -6,7 +6,6 @@
             <n-select class="!w-[300px]" type="select" v-model:value="user" @update:value="selectHandler" size="small" :options="userOptions" />
         </div>
         <div class="ml-auto divide-x-[1px] flex items-center">
-            <RouterLink class="px-4" :to="{ name: 'forms' }">Forms Page</RouterLink>
             <RouterLink class="px-4" :to="{ name: 'login' }">Login</RouterLink>
             <RouterLink class="px-4" :to="{ name: 'register' }">Register</RouterLink>
         </div>

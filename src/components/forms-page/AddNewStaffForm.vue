@@ -35,18 +35,27 @@
             <n-form-item v-show="formValue.role === 'staff'" label="Projects" label-style="font-weight: 600" class="col-span-2">
                 <n-dynamic-input v-model:value="formValue.projects" #="{ index, value }" :on-create="onCreate">
                     <div style="display: flex; align-items: flex-start; width: 100%" class="gap-2">
-                        <n-form-item ignore-path-change :show-label="false" :path="`projects[${index}].name`">
-                            <n-input v-model:value="formValue.projects[index].name" placeholder="Name" @keydown.enter.prevent />
+                        <n-form-item ignore-path-change :show-label="false" :path="`projects[${index}].name`" class="flex-1">
+                            <n-select v-model:value="formValue.projects[index].name" :options="companyOptions" />
+                        </n-form-item>
+
+                        <n-form-item ignore-path-change :show-label="false" :path="`projects[${index}].allocation`" class="flex-1">
+                            <n-input
+                                type="number"
+                                v-model:value="formValue.projects[index].allocation"
+                                placeholder="Time allocation"
+                                @keydown.enter.prevent
+                            />
                         </n-form-item>
 
                         <n-date-picker
                             v-model:value="formValue.projects[index].range"
                             type="daterange"
                             clearable
-                            @keydown.enter.prevent
+                            @keydown.enter.preventj
                             update-value-on-close
                             :actions="null"
-                            class="w-full"
+                            class="flex-[2]"
                             :show-label="false"
                         />
                     </div>
@@ -86,7 +95,8 @@
         role: "",
         type: "",
         coach: "",
-        projects: [{ name: "", range: null }],
+        projects: [{ name: "", allocation: null }],
+        // projects: [{ name: "", range: null }],
     });
 
     const rules = {
@@ -124,16 +134,16 @@
 
     const companyOptions = [
         {
-            label: "Coach1",
+            label: "Project1",
             value: "song0",
             disabled: true,
         },
         {
-            label: "Coach2",
+            label: "Project2",
             value: "song1",
         },
         {
-            label: "Coach3",
+            label: "Project3",
             value: "song2",
         },
     ];
@@ -152,12 +162,12 @@
         {
             label: "Resource Manager",
             value: "rm",
-            disabled: !["super-super-admin", "super-admin", "admin"].includes(userStatus.value),
+            disabled: !["super-super-admin", "admin"].includes(userStatus.value),
         },
         {
             label: "Staff",
             value: "staff",
-            disabled: !["super-super-admin", "super-admin", "admin", "rm"].includes(userStatus.value),
+            disabled: !["super-super-admin", "rm"].includes(userStatus.value),
         },
     ];
 

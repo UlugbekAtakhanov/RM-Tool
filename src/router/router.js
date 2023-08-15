@@ -33,14 +33,14 @@ const routes = [
                 component: () => import("../pages/GantPage.vue"),
             },
             {
-                path: "forms",
-                name: "forms",
-                component: () => import("../pages/FormsPage.vue"),
-            },
-            {
                 path: "users",
                 name: "users",
                 component: () => import("../pages/UsersPage.vue"),
+            },
+            {
+                path: "resources",
+                name: "resources",
+                component: () => import("../pages/ResourcesPage.vue"),
             },
             {
                 path: "companies",
