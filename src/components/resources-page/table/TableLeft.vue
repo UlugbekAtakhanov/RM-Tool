@@ -1,5 +1,5 @@
 <template>
-    <div class="transition-all duration-300" :class="isOpen ? 'w-[500px]' : 'w-[140px]'">
+    <div class="transition-all duration-300" :class="isOpen ? 'w-[380px]' : 'w-[140px]'">
         <table class="bg-white text-xs w-[500px]">
             <thead>
                 <tr class="border-b whitespace-nowrap h-[33px]">
@@ -23,10 +23,18 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index) in projectList" :key="item.id" class="hover:bg-sky-50 border-b text-center h-[33px]">
-                    <td class="text-xs">{{ index + 1 }}</td>
-                    <td class="text-left w-[150px]">{{ item.name }}</td>
-                    <td class="text-left w-[150px]">-</td>
-                    <td class="text-left w-[150px]">{{ item.hours }}</td>
+                    <td class="text-xs align-top">{{ index + 1 }}</td>
+                    <td class="text-left w-[150px] align-top">{{ item.name }}</td>
+                    <td class="text-left w-[150px]">
+                        <div v-for="project in item.projects" :key="project.id" class="h-[33px]">
+                            {{ project.name }}
+                        </div>
+                    </td>
+                    <td class="text-left w-[150px]">
+                        <div v-for="project in item.projects" :key="project.id" class="h-[33px] border">
+                            {{ project.hours }}
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>

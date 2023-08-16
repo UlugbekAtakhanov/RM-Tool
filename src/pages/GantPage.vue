@@ -7,7 +7,7 @@
             </Modal>
             <DatePicker />
         </div>
-        <div class="flex items-start">
+        <div class="flex items-start max-h-[70vh] overflow-y-scroll">
             <TableLeft />
             <TableRight />
         </div>

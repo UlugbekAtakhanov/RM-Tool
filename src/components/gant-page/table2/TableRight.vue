@@ -1,9 +1,9 @@
 <template>
-    <div class="flex-[2] shrink-0 overflow-x-scroll">
+    <div class="flex-[2] shrink-0 overflow-x-scroll sticky top-0">
         <!-- days row -->
-        <table class="bg-white rounded-r-md text-xs border-l">
+        <table class="bg-white rounded-r-md text-xs border-l ">
             <thead>
-                <tr class="border-b h-[33px]">
+                <tr class="border-b h-[33px] bg-purple-50">
                     <th
                         v-for="day in arrOfDays"
                         :key="day.id"

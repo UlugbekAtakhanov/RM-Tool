@@ -18,23 +18,24 @@
 
         <!-- gant chart -->
         <div
-            v-for="(item, parentIndex) in projectListComputed"
+            v-for="(item, parentIndex) in resourceListComputed"
             :key="parentIndex"
-            class="bg-white h-[33px] relative flex overflow-hidden"
+            class="bg-white relative flex overflow-hidden"
             :style="{ width: arrOfDays.length * 80 + 'px' }"
         >
-            <!-- drop zone -->
-            <!-- @drop="(e) => onDrop(e, item.phase, parentIndex)"
-            @dragenter.prevent
-            @dragover.prevent -->
-            <div v-for="(_, index) in arrOfDays" :data-index="index" :key="index" class="w-[80px] text-xs border-l" :projectList="projectList"></div>
-            <GantLine :item="item" :projectList="projectList" />
+            <!-- class="bg-white h-[33px] relative flex overflow-hidden" -->
+            <div
+                v-for="(_, index) in arrOfDays"
+                :data-index="index"
+                :key="index"
+                class="w-[80px] text-xs border-l"
+                :resourceList="resourceList"
+            ></div>
+            <div v-for="(project, index) in item.projects" :style="{ height: item.projects.length * 33 + 'px' }">
+                <GantLine :item="project" :index="index" />
+            </div>
         </div>
     </div>
-
-    <!-- <div class="fixed top-[310px] right-4 bg-slate-900 text-white p-1 rounded w-1/2 overflow-y-scroll h-[600px]">
-        <pre>{{ JSON.stringify(projectList, null, 2) }}</pre>
-    </div> -->
 </template>
 
 <script setup>
@@ -50,7 +51,7 @@
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
     const { resourceList: list } = useProjectListStore();
-    const projectList = ref(list);
+    const resourceList = ref(list);
 
     // create arr of days
     const arrOfDays = computed(() => {
@@ -60,39 +61,17 @@
     });
 
     // modify project list giving new keys - startPoint, duration
-    const projectListComputed = computed(() => {
-        const newList = projectList.value.map((project) => {
-            const newPhase = project.phase.map((item) => {
+    const resourceListComputed = computed(() => {
+        const newList = resourceList.value.map((project) => {
+            const newProjects = project.projects.map((item) => {
                 return {
                     ...item,
                     startPoint: (new Date(item.from) - new Date(startDate.value)) / getAmountDay(1),
                     duration: (new Date(item.to) - new Date(item.from)) / getAmountDay(1),
                 };
             });
-            return { ...project, phase: newPhase };
+            return { ...project, projects: newProjects };
         });
         return newList;
     });
-
-    // on drop effect
-    const onDrop = (e, phases, parentIndex) => {
-        const itemId = parseInt(e.dataTransfer.getData("itemId"));
-        let el = phases.find((item) => item.id === itemId);
-        const moveCell = parseInt(e.target.dataset.index);
-        const prevStartPoint = el.startPoint;
-
-        if (prevStartPoint < moveCell) {
-            el.startPoint = moveCell - el.duration + 1;
-            el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-            el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-        } else {
-            el.startPoint = parseInt(moveCell);
-            el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-            el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(el.startPoint - prevStartPoint)), "MMM dd, yyyy");
-        }
-
-        const { startPoint, ...rest } = el;
-        const mutatingElementIndex = projectList.value[parentIndex].phase.findIndex((item) => item.id === itemId);
-        projectList.value[parentIndex].phase[mutatingElementIndex] = rest;
-    };
 </script>

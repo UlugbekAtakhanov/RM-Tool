@@ -2,7 +2,7 @@
     <div class="transition-all duration-300" :class="isOpen ? 'w-[500px]' : 'w-[140px]'">
         <table class="bg-white text-xs w-[500px]">
             <thead>
-                <tr class="border-b whitespace-nowrap h-[33px]">
+                <tr class="border-b whitespace-nowrap h-[33px] sticky top-0 bg-purple-50">
                     <th class="px-1 w-8 cursor-pointer" @click="isOpen = !isOpen">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
