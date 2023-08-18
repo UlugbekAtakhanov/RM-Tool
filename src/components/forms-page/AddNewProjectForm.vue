@@ -67,7 +67,7 @@
 <script setup>
     import { ref } from "vue";
     import { useMessage } from "naive-ui";
-    import { millisecondToDay } from "../../utils/Days";
+    import { millisecondsInDays } from "../../utils/Days";
 
     const formRef = ref(null);
     const message = useMessage();
@@ -207,7 +207,7 @@
             if (!errors) {
                 const from = formValue.value.range[0];
                 const to = formValue.value.range[1];
-                const duration = millisecondToDay(to) - millisecondToDay(from);
+                const duration = millisecondsInDays(to) - millisecondsInDays(from);
                 const data = { ...formValue.value, range: { from, to, duration } };
                 console.log(data);
                 message.success("Submitted successfully!");

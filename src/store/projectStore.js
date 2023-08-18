@@ -4,6 +4,18 @@ export const useProjectListStore = defineStore("project-list", {
     state: () => ({
         projectList: [
             {
+                id: 0,
+                title: "Project0",
+                ye: "31Dec",
+                scope: "A+R",
+                manager: "Julia",
+                team: ["Sevara", "Bimple"],
+                color: "brown",
+                from: "July 7, 2023",
+                to: "July 12, 2023",
+                duration: 5,
+            },
+            {
                 id: 1,
                 title: "Project1",
                 ye: "31Dec",
@@ -23,9 +35,9 @@ export const useProjectListStore = defineStore("project-list", {
                 manager: "Kanza",
                 team: ["Jing"],
                 color: "yellow",
-                from: "July 15, 2023",
+                from: "July 14, 2023",
                 to: "July 20, 2023",
-                duration: 5,
+                duration: 6,
             },
             {
                 id: 3,
@@ -36,14 +48,28 @@ export const useProjectListStore = defineStore("project-list", {
                 team: ["Nan"],
                 color: "cyan",
                 from: "July 10, 2023",
-                to: "July 16, 2023",
-                duration: 6,
+                to: "July 18, 2023",
+                duration: 8,
+            },
+            {
+                id: 4,
+                title: "Project3",
+                ye: "31Dec",
+                scope: "A+R",
+                manager: "Kent",
+                team: ["Nan"],
+                color: "teal",
+                from: "July 10, 2023",
+                to: "July 31, 2023",
+                duration: 21,
             },
         ],
         resourceList: [
             {
                 id: 1,
                 name: "Resource1 ",
+                position: "M",
+                coach: "Greg H",
                 projects: [
                     { id: 1, name: "Project1", hours: 10, color: "brown", from: "July 5, 2023", to: "July 10, 2023", duration: 5 },
                     { id: 2, name: "Project2", hours: 20, color: "red", from: "July 11, 2023", to: "July 14, 2023", duration: 3 },
@@ -54,6 +80,8 @@ export const useProjectListStore = defineStore("project-list", {
             {
                 id: 2,
                 name: "Resource2",
+                position: "Sennior Asso.",
+                coach: "Julia",
                 projects: [
                     { id: 3, name: "Project3", hours: 30, color: "yellow", from: "July 15, 2023", to: "July 28, 2023", duration: 13 },
                     { id: 4, name: "Project4", hours: 40, color: "orange", from: "July 02, 2023", to: "July 06, 2023", duration: 4 },
@@ -62,6 +90,8 @@ export const useProjectListStore = defineStore("project-list", {
             {
                 id: 3,
                 name: "Resource3",
+                position: "ITGC",
+                coach: "Timur",
                 projects: [
                     { id: 2, name: "Project2", hours: 20, color: "red", from: "July 11, 2023", to: "July 14, 2023", duration: 3 },
                     { id: 5, name: "Project5", hours: 50, color: "cyan", from: "July 10, 2023", to: "July 19, 2023", duration: 9 },

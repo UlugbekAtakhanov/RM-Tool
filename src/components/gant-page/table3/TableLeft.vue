@@ -29,8 +29,7 @@
                     :key="item.id"
                     :id="item.id"
                     @contextmenu="(e) => handleContextMenu(e, item)"
-                    class="hover:bg-sky-50 border-b text-center h-[33px] cursor-pointer"
-                    title="Right click for more options"
+                    class="hover:bg-sky-50 border-b text-center h-[33px]"
                 >
                     <td class="text-xs">{{ index + 1 }}</td>
                     <td class="text-left w-[150px]" :id="item.id">{{ item.title }}</td>
@@ -57,7 +56,7 @@
 
     const { projectList: list } = useProjectListStore();
     const projectList = ref(list);
-    const isOpen = ref(true);
+    const isOpen = ref(false);
 
     const showDropdownRef = ref(false);
     const xRef = ref(0);

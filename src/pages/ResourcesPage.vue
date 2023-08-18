@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-    import TableLeft from "../components/resources-page/table/TableLeft.vue";
-    import TableRight from "../components/resources-page/table/TableRight.vue";
+    // import TableLeft from "../components/resources-page/table/TableLeft.vue";
+    // import TableRight from "../components/resources-page/table/TableRight.vue";
     import DatePicker from "../components/resources-page/DatePicker.vue";
     import TableLeft1 from "../components/resources-page/table/TableLeft1.vue";
 </script>

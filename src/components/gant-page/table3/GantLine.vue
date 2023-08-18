@@ -3,7 +3,7 @@
         :style="{ left: item.startPoint * 80 + 'px', background: item.color, width: item.duration * 80 + 'px' }"
         draggable="true"
         @dragstart="(e) => startDrag(e, item)"
-        @dragend="(e) => endDrag(e, item)"
+        @dragend="endDrag"
         class="resize-x group overflow-hidden absolute h-[20px] top-1/2 -translate-y-1/2 w-20 group rounded-full drop-shadow-md cursor-pointer"
         ref="el"
         :data-parent-id="item.id"
@@ -22,9 +22,9 @@
 </template>
 
 <script setup>
-    import { format } from "date-fns";
+    import { format, isWeekend } from "date-fns";
     import { ref, toRefs } from "vue";
-    import { daysInMilliseconds } from "../../../utils/Days";
+    import { daysInMilliseconds, daysWithWeekends } from "../../../utils/Days";
 
     const el = ref([]);
     const props = defineProps({ item: Object, projectList: Array });
@@ -48,18 +48,49 @@
 
     const onResize = (e) => {
         const parentId = parseInt(e.target.dataset.parentId);
-
         const parentIndex = projectList.value.findIndex((item) => item.id === parentId);
 
         const elPrevWidth = projectList.value[parentIndex].duration * 80;
         const elCurrentWidth = e.target.getBoundingClientRect().width;
 
         const data = projectList.value[parentIndex];
+        const startPoint = data.from;
 
         const diff = Math.ceil((elCurrentWidth - elPrevWidth) / 80);
 
         const newTo = format(new Date(new Date(data.to).getTime() + daysInMilliseconds(diff)), "MMMM dd, yyyy");
-        projectList.value[parentIndex] = { ...data, duration: data.duration + diff, to: newTo };
+
+        console.log(startPoint);
+        console.log(newTo);
+
+        console.log({ diff });
+
+        const daysList = daysWithWeekends(startPoint, newTo);
+        const weekendsAmount = daysList.filter((item) => item.isWeekends).length;
+        console.log(daysList);
+        console.log({ weekendsAmount });
+
+        if (weekendsAmount === 1) {
+            projectList.value[parentIndex] = {
+                ...data,
+                duration: data.duration + diff + 2,
+                to: format(new Date(new Date(data.to).getTime() + daysInMilliseconds(diff + 2)), "MMMM dd, yyyy"),
+            };
+        } else if (weekendsAmount === 2) {
+            projectList.value[parentIndex] = {
+                ...data,
+                duration: data.duration + diff + weekendsAmount,
+                to: format(new Date(new Date(data.to).getTime() + daysInMilliseconds(diff + weekendsAmount)), "MMMM dd, yyyy"),
+            };
+        } else {
+            projectList.value[parentIndex] = {
+                ...data,
+                duration: data.duration + diff,
+                to: format(new Date(new Date(data.to).getTime() + daysInMilliseconds(diff)), "MMMM dd, yyyy"),
+            };
+        }
+
+        //     // projectList.value[parentIndex] = { ...data, duration: data.duration + diff, to: newTo };
     };
 </script>
 

@@ -1,3 +1,5 @@
+<!-- without weekends -->
+
 <template>
     <h1 class="text-2xl font-semibold text-center p-4 text-primary rounded-md">Projects</h1>
     <div>

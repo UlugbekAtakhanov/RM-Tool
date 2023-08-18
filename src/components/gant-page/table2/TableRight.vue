@@ -1,16 +1,18 @@
+<!-- with weekends - approved currently -->
+
 <template>
     <div class="flex-[2] shrink-0 overflow-x-scroll sticky top-0">
         <!-- days row -->
-        <table class="bg-white rounded-r-md text-xs border-l ">
+        <table class="bg-white rounded-r-md text-[10px] border-l">
             <thead>
                 <tr class="border-b h-[33px] bg-purple-50">
                     <th
                         v-for="day in arrOfDays"
                         :key="day.id"
                         class="whitespace-nowrap border-r min-w-[80px] px-2"
-                        :class="day.isWeekends ? 'bg-slate-100' : ''"
+                        :class="day.isWeekends ? 'bg-sky-50 ' : ''"
                     >
-                        {{ format(new Date(day.date), "dd-MMM") }}
+                        {{ format(new Date(day.date), "dd-MMM-EEE") }}
                     </th>
                 </tr>
             </thead>
@@ -28,10 +30,11 @@
                 @drop="(e) => onDrop(e, item, parentIndex)"
                 @dragenter.prevent
                 @dragover.prevent
-                v-for="(_, index) in arrOfDays"
+                v-for="(day, index) in arrOfDays"
                 :data-index="index"
                 :key="index"
                 class="w-[80px] text-xs border-l"
+                :class="day.isWeekends ? 'bg-sky-50' : ''"
                 :projectList="projectList"
             ></div>
             <GantLine :item="item" :projectList="projectList" />
@@ -47,7 +50,7 @@
     import { computed, ref } from "vue";
     import { storeToRefs } from "pinia";
     import { format } from "date-fns";
-    import { days, getAmountDay } from "../../../utils/Days";
+    import { daysWithWeekends, daysInMilliseconds } from "../../../utils/Days";
     import { useDateRangeStore } from "../../../store/dateRangeStore";
     import { useProjectListStore } from "../../../store/projectStore";
     import GantLine from "./GantLine.vue";
@@ -62,7 +65,7 @@
     const arrOfDays = computed(() => {
         const start = format(new Date(startDate.value), "yyyy-MM-dd");
         const end = format(new Date(endDate.value), "yyyy-MM-dd");
-        return days(start, end);
+        return daysWithWeekends(start, end);
     });
 
     // modify project list giving new keys - startPoint, duration
@@ -70,8 +73,8 @@
         const newList = projectList.value.map((project) => {
             const newObj = {
                 ...project,
-                startPoint: (new Date(project.from) - new Date(startDate.value)) / getAmountDay(1),
-                duration: (new Date(project.to) - new Date(project.from)) / getAmountDay(1),
+                startPoint: (new Date(project.from) - new Date(startDate.value)) / daysInMilliseconds(1),
+                duration: (new Date(project.to) - new Date(project.from)) / daysInMilliseconds(1),
             };
             return newObj;
         });
@@ -91,10 +94,10 @@
         const diff = Math.round((end - start) / 80 - parseInt(width / 80 / 2));
 
         el.startPoint = el.startPoint + diff;
-        el.from = format(new Date(new Date(el.from).getTime() + getAmountDay(diff)), "MMM dd, yyyy");
-        el.to = format(new Date(new Date(el.to).getTime() + getAmountDay(diff)), "MMM dd, yyyy");
+        el.from = format(new Date(new Date(el.from).getTime() + daysInMilliseconds(diff)), "MMM dd, yyyy");
+        el.to = format(new Date(new Date(el.to).getTime() + daysInMilliseconds(diff)), "MMM dd, yyyy");
 
-        if (el) {
+        if (el.id === parentId) {
             const { startPoint, ...rest } = el;
             projectList.value[parentIndex] = rest;
         }
