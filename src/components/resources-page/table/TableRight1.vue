@@ -1,40 +1,20 @@
 <template>
-    <div class="transition-all duration-300" :class="isOpen ? 'w-[500px]' : 'w-[140px]'">
-        <table class="bg-white text-xs border-b">
+    <div>
+        <table class="bg-white text-xs border-b border-l">
             <thead>
                 <tr class="border-b whitespace-nowrap h-[33px] bg-purple-50">
-                    <th class="px-1 cursor-pointer hover:bg-purple-100" @click="isOpen = !isOpen">
-                        <i class="fa-solid fa-chevron-left fa-flip w-4" style="--fa-animation-duration: 3s"></i>
+                    <th
+                        v-for="day in arrOfDays"
+                        class="whitespace-nowrap border-r min-w-[80px] px-2 text-[10px]"
+                        :class="day.isWeekends ? 'bg-sky-50' : ''"
+                    >
+                        {{ format(new Date(day.date), "EEE, dd MMM") }}
                     </th>
-                    <th class="text-left pr-10">Resource name</th>
-                    <th class="text-left pr-10">Position</th>
-                    <th class="text-left pr-10">Coach</th>
-                    <th class="text-left pr-10">Projects</th>
-                    <th class="text-center px-2">Hours</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in resourceListComputed" :key="item.id" class="hover:bg-sky-50 divide-y text-center group">
-                    <td class="text-xs align-top">{{ index + 1 }}</td>
-                    <td class="text-left w-[150px] align-top">{{ item.name }}</td>
-
-                    <td class="text-left w-[150px] align-top">{{ item.position }}</td>
-
-                    <td class="text-left w-[150px] align-top">{{ item.coach }}</td>
-
-                    <td class="text-left w-[150px]">
-                        <div v-for="project in item.projects" :key="project.id" class="h-[33px]">
-                            {{ project.name }}
-                        </div>
-                    </td>
-
-                    <td class="text-left w-[150px]">
-                        <div v-for="project in item.projects" :key="project.id" class="h-[33px] text-center">
-                            {{ project.hours }}
-                        </div>
-                    </td>
-
-                    <!-- <td :colspan="arrOfDays.length">
+                <tr v-for="(item, index) in resourceListComputed" :key="item.id" class="hover:bg-sky-50 text-center group">
+                    <td :colspan="arrOfDays.length" class="overflow-hidden">
                         <div class="bg-white group-hover:bg-sky-50" :style="{ width: arrOfDays.length * 80 + 'px' }">
                             <div v-for="(project, index) in item.projects" class="h-[33px] flex relative">
                                 <div
@@ -47,7 +27,7 @@
                                 <Gantline1 :item="project" :index="index" />
                             </div>
                         </div>
-                    </td> -->
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -90,6 +70,4 @@
         });
         return newList;
     });
-
-    const isOpen = ref(true);
 </script>

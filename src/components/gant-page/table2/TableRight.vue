@@ -12,7 +12,7 @@
                         class="whitespace-nowrap border-r min-w-[80px] px-2"
                         :class="day.isWeekends ? 'bg-sky-50 ' : ''"
                     >
-                        {{ format(new Date(day.date), "dd-MMM-EEE") }}
+                        {{ format(new Date(day.date), "EEE, dd MMM") }}
                     </th>
                 </tr>
             </thead>

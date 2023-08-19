@@ -62,7 +62,7 @@
         email: `test${index}@test.com`,
     }));
 
-    const pagination = reactive({ 
+    const pagination = reactive({
         page: 1,
         pageSize: 10,
         showSizePicker: true,

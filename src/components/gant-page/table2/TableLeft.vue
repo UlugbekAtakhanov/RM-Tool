@@ -3,18 +3,8 @@
         <table class="bg-white text-xs w-[500px]">
             <thead>
                 <tr class="border-b whitespace-nowrap h-[33px] sticky top-0 bg-purple-50">
-                    <th class="px-1 w-8 cursor-pointer" @click="isOpen = !isOpen">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="{1.5}"
-                            stroke="currentColor"
-                            class="w-4 mx-auto transition-all"
-                            :class="isOpen ? 'rotate-0' : 'rotate-180'"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                        </svg>
+                    <th class="px-1 w-8 cursor-pointer hover:bg-purple-100" @click="isOpen = !isOpen">
+                        <i class="fa-solid fa-chevron-left fa-flip" style="--fa-animation-duration: 3s"></i>
                     </th>
                     <th class="text-left">Project name</th>
                     <th>YE</th>
