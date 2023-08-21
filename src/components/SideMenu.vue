@@ -22,7 +22,7 @@
                     />
                 </div>
             </n-layout-sider>
-            <n-layout class="mb-10">
+            <n-layout class="mb-">
                 <RouterView />
             </n-layout>
         </n-layout>

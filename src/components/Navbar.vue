@@ -1,6 +1,6 @@
 <template>
     <div class="w-full text-sm font-semibold border-b p-4 flex items-center gap-4">
-        <h1 class="text-2xl text-primary">RM Tool</h1>
+        <RouterLink :to="{ name: 'home' }" class="text-2xl text-primary !no-underline">RM Tool</RouterLink>
         <div class="flex items-center ml-12 gap-2">
             Assuming the user is:
             <n-select class="!w-[300px]" type="select" v-model:value="user" @update:value="selectHandler" size="small" :options="userOptions" />
@@ -60,7 +60,16 @@
 
     const options = [
         {
-            label: "Settings",
+            label: () =>
+                h(
+                    RouterLink,
+                    {
+                        to: {
+                            name: "settings",
+                        },
+                    },
+                    { default: () => "Settings" }
+                ),
             icon() {
                 return h(NIcon, null, {
                     default: () => h(SettingsOutline),

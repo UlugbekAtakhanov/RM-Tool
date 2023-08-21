@@ -22,7 +22,7 @@
         <div
             v-for="(item, parentIndex) in projectListComputed"
             :key="parentIndex"
-            class="bg-white h-[33px] relative flex overflow-hidden"
+            class="bg-white h-[33px] relative flex overflow-hidden hover:bg-sky-50 hover:border-"
             :style="{ width: arrOfDays.length * 80 + 'px' }"
         >
             <!-- drop zone -->
