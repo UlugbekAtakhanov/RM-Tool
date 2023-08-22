@@ -32,10 +32,12 @@
             primaryColorPressed: "#7d4dcc",
         },
     };
+
     const darkThemeOverrides = {
         common: {
             primaryColor: "#FFFFFF",
         },
     };
+
     const theme = null;
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="mb-20">
-        <h1 id="holidays-list" class="text-xl font-semibold text-primary rounded-md mb-8">Holidays List</h1>
+        <h1 id="holidays-list" class="mb-8 rounded-md text-xl font-semibold text-primary">Holidays List</h1>
 
         <!-- modal -->
         <div class="mb-2 flex gap-2">
@@ -35,17 +35,20 @@
 
 <script setup>
     import { useMessage } from "naive-ui";
-    import { computed, ref, toRefs } from "vue";
+    import { computed, ref, toRef } from "vue";
     import Modal from "../../components/Modal.vue";
     import AddNewHolidayForm from "../../components/forms-page/AddNewHolidayForm.vue";
     import { useHolidaysStore } from "../../store/holidaysStore";
+    import { storeToRefs } from "pinia";
 
     const message = useMessage();
 
-    const { holidaysList, deleteHolidays } = useHolidaysStore();
+    const holidaysStore = useHolidaysStore();
+    const { holidaysList } = storeToRefs(holidaysStore);
+    const { deleteHolidays } = holidaysStore;
 
     const computedList = computed(() => {
-        return holidaysList.map((item) => ({ ...item, key: item.id }));
+        return holidaysList.value.map((item) => ({ ...item, key: item.id }));
     });
 
     const createData = () => computedList;
@@ -57,7 +60,15 @@
 
     const deleleteHandler = () => {
         const deletingListKeys = checkedRowKeysRef.value;
+        holidaysList.value = holidaysList.value.filter((holiday) => !deletingListKeys.includes(holiday.id));
         deleteHolidays(deletingListKeys);
+        deleteDisabledState.value = true;
+        message.error("Deleted successfully.");
+    };
+
+    const handleCheck = (rowKeys) => {
+        deleteDisabledState.value = rowKeys.length ? false : true;
+        checkedRowKeysRef.value = rowKeys;
     };
 
     const createColumns = () => [
@@ -80,17 +91,12 @@
 
     const columns = createColumns();
 
-    const handleCheck = (rowKeys) => {
-        deleteDisabledState.value = rowKeys.length ? false : true;
-        checkedRowKeysRef.value = rowKeys;
-    };
-
     const rowProps = (row) => {
         return {
             style: "cursor: pointer;",
             onClick: (e) => {
                 console.log(e);
-                message.info(row.name);
+                // message.info(row.name);
             },
         };
     };

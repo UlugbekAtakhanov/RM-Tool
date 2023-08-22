@@ -11,7 +11,7 @@
                 @collapse="collapsed = true"
                 @expand="collapsed = false"
             >
-                <div class="h-full overflow-y-scroll">
+                <div class="h-full overflow-y-scroll relative">
                     <n-menu
                         :indent="18"
                         v-model:value="activeKey"
@@ -40,6 +40,7 @@
         WineOutline as WineIcon,
         FolderOpenOutline,
         PeopleOutline,
+        SettingsOutline,
     } from "@vicons/ionicons5";
     import { RouterLink } from "vue-router";
     import { useUserStore } from "../store/userStore";
@@ -209,6 +210,21 @@
                     key: "the-past-increases-the-future-recedes",
                 },
             ],
+        },
+        {
+            label: () =>
+                h(
+                    RouterLink,
+                    {
+                        to: {
+                            name: "settings",
+                        },
+                    },
+                    { default: () => "Settings" }
+                ),
+            key: "settings",
+            show: ![].includes(user.value),
+            icon: renderIcon(SettingsOutline),
         },
     ]);
 

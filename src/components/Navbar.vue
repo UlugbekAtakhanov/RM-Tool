@@ -60,24 +60,6 @@
 
     const options = [
         {
-            label: () =>
-                h(
-                    RouterLink,
-                    {
-                        to: {
-                            name: "settings",
-                        },
-                    },
-                    { default: () => "Settings" }
-                ),
-            icon() {
-                return h(NIcon, null, {
-                    default: () => h(SettingsOutline),
-                });
-            },
-            key: "settings",
-        },
-        {
             type: "divider",
             key: "d1",
         },

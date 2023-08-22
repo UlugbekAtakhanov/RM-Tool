@@ -5,22 +5,27 @@
         :data="data"
         :pagination="pagination"
         :max-height="'60vh'"
-        :row-key="rowKey"
-        @update:checked-row-keys="handleCheck"
+        :row-key="(row) => row.key"
+        @update:checked-row-keys="(rowKeys) => handleCheck(rowKeys)"
         :row-props="rowProps"
     />
 </template>
 
 <script setup>
-    import { useMessage } from "naive-ui";
-    import { reactive, ref } from "vue";
+    import { reactive } from "vue";
 
-    const message = useMessage();
-    const checkedRowKeysRef = ref([]);
+    // props
+    defineProps({ checkedRowKeysRef: Array, data: Array });
 
-    const checkedRowKeys = checkedRowKeysRef;
-    // console.log(checkedRowKeys.value);
+    // emits
+    const emit = defineEmits(["handleCheck"]);
 
+    // emitting check handler of users
+    const handleCheck = (rowKeys) => {
+        emit("handleCheck", rowKeys);
+    };
+
+    // creating columns for table
     const createColumns = () => [
         {
             type: "selection",
@@ -45,22 +50,7 @@
             key: "email",
         },
     ];
-
     const columns = createColumns();
-
-    const rowKey = (row) => row.key;
-
-    const handleCheck = (rowKeys) => {
-        checkedRowKeysRef.value = rowKeys;
-    };
-
-    const data = Array.from({ length: 46 }).map((_, index) => ({
-        key: index,
-        name: `Edward King ${index}`,
-        role: `Super Admin ${index}`,
-        coach: `Coach ${index}`,
-        email: `test${index}@test.com`,
-    }));
 
     const pagination = reactive({
         page: 1,
@@ -81,7 +71,7 @@
             style: "cursor: pointer;",
             onClick: (e) => {
                 console.log(e);
-                message.info(row.name);
+                // message.info(row.name);
             },
         };
     };

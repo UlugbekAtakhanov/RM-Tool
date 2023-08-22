@@ -43,9 +43,9 @@
                         </svg>
                         Forgot your password?
                     </RouterLink>
-                    <RouterLink :to="{ name: 'register' }" class="text-gray-400 underline hover:text-gray-500 text-xs text-center block"
-                        >or Sign up</RouterLink
-                    >
+                    <RouterLink :to="{ name: 'register' }" class="text-gray-400 underline hover:text-gray-500 text-xs text-center block">
+                        or Sign up
+                    </RouterLink>
                 </n-form>
             </div>
         </div>

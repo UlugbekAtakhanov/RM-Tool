@@ -1,5 +1,4 @@
 <!-- with weekends - approved currently -->
-
 <template>
     <div class="flex-[2] shrink-0 overflow-x-scroll sticky top-0">
         <!-- days row -->
@@ -10,7 +9,7 @@
                         v-for="day in arrOfDays"
                         :key="day.id"
                         class="whitespace-nowrap border-r min-w-[80px] px-2"
-                        :class="day.isWeekends ? 'bg-sky-50 ' : ''"
+                        :class="day.holiday ? 'bg-red-50' : day.isWeekends ? 'bg-sky-50' : ''"
                     >
                         {{ format(new Date(day.date), "EEE, dd MMM") }}
                     </th>
@@ -34,7 +33,7 @@
                 :data-index="index"
                 :key="index"
                 class="w-[80px] text-xs border-l"
-                :class="day.isWeekends ? 'bg-sky-50' : ''"
+                :class="day.holiday ? 'bg-red-50' : day.isWeekends ? 'bg-sky-50' : ''"
                 :projectList="projectList"
             ></div>
             <GantLine :item="item" :projectList="projectList" />
@@ -54,6 +53,10 @@
     import { useDateRangeStore } from "../../../store/dateRangeStore";
     import { useProjectListStore } from "../../../store/projectStore";
     import GantLine from "./GantLine.vue";
+    import { useHolidaysStore } from "../../../store/holidaysStore";
+
+    const holidaysStore = useHolidaysStore();
+    const { holidaysList } = storeToRefs(holidaysStore);
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
@@ -65,7 +68,9 @@
     const arrOfDays = computed(() => {
         const start = format(new Date(startDate.value), "yyyy-MM-dd");
         const end = format(new Date(endDate.value), "yyyy-MM-dd");
-        return daysWithWeekends(start, end);
+        const days = daysWithWeekends(start, end);
+        const holidays = holidaysList.value.map((holiday) => new Date(holiday.date).getTime());
+        return days.map((day) => ({ ...day, holiday: !day.isWeekends && holidays.includes(new Date(day.date).getTime()) }));
     });
 
     // modify project list giving new keys - startPoint, duration

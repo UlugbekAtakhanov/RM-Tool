@@ -6,7 +6,7 @@
                     <th
                         v-for="day in arrOfDays"
                         class="whitespace-nowrap border-r min-w-[80px] px-2 text-[10px]"
-                        :class="day.isWeekends ? 'bg-sky-50' : ''"
+                        :class="day.holiday ? 'bg-red-50' : day.isWeekends ? 'bg-sky-50' : ''"
                     >
                         {{ format(new Date(day.date), "EEE, dd MMM") }}
                     </th>
@@ -22,7 +22,7 @@
                                     :data-index="index"
                                     :key="index"
                                     class="border-r -translate-x-[1px] w-[80px] group-hover:bg-sky-50"
-                                    :class="day.isWeekends ? 'bg-sky-50' : ''"
+                                    :class="day.holiday ? 'bg-red-50' : day.isWeekends ? 'bg-sky-50' : ''"
                                 ></div>
                                 <Gantline1 :item="project" :index="index" />
                             </div>
@@ -42,9 +42,13 @@
     import { format } from "date-fns";
     import { daysWithWeekends, daysInMilliseconds } from "../../../utils/Days";
     import Gantline1 from "./GantLine1.vue";
+    import { useHolidaysStore } from "../../../store/holidaysStore";
 
-    const { resourceList: list } = useProjectListStore();
-    const resourceList = ref(list);
+    const holidaysStore = useHolidaysStore();
+    const { holidaysList } = storeToRefs(holidaysStore);
+
+    const projectListStore = useProjectListStore();
+    const { resourceList } = storeToRefs(projectListStore);
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
@@ -53,7 +57,9 @@
     const arrOfDays = computed(() => {
         const start = format(new Date(startDate.value), "yyyy-MM-dd");
         const end = format(new Date(endDate.value), "yyyy-MM-dd");
-        return daysWithWeekends(start, end);
+        const days = daysWithWeekends(start, end);
+        const holidays = holidaysList.value.map((holiday) => new Date(holiday.date).getTime());
+        return days.map((day) => ({ ...day, holiday: !day.isWeekends && holidays.includes(new Date(day.date).getTime()) }));
     });
 
     // modify project list giving new keys - startPoint, duration
