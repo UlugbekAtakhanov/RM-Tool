@@ -1,9 +1,9 @@
 <template>
     <AddNewCompanyForm />
-    <AddNewStaffForm />
+    <AddNewUsersForm />
 </template>
 
 <script setup>
-    import AddNewCompanyForm from "../components/forms-page/AddNewCompanyForm.vue";
-    import AddNewStaffForm from "../components/forms-page/AddNewStaffForm.vue";
+    import AddNewCompanyForm from "../components/forms/AddNewCompanyForm.vue";
+    import AddNewUsersForm from "../components/forms/AddNewUsersForm.vue";
 </script>

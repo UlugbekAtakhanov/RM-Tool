@@ -42,7 +42,7 @@
                         </n-form-item>
 
                         <n-form-item class="!flex !justify-end col-span-2 mt-4">
-                            <n-button type="primary" class="!px-12" @click="handleSubmit"> Sign up</n-button>
+                            <n-button :disabled="isLoading" type="primary" class="!px-12" @click="handleSubmit"> Sign up</n-button>
                         </n-form-item>
                     </div>
                 </n-form>
@@ -56,11 +56,15 @@
 
 <script setup>
     import { ref } from "vue";
-    import { useMessage } from "naive-ui";
+    import { useRouter } from "vue-router";
+    import { useLoadingBar, useMessage } from "naive-ui";
     import { useRegisterData } from "../hooks/useRegisterHooks";
 
-    const formRef = ref(null);
     const message = useMessage();
+    const loadingBar = useLoadingBar();
+    const router = useRouter();
+
+    const formRef = ref(null);
 
     const formValue = ref({
         firstName: "",
@@ -120,17 +124,14 @@
         },
     };
 
-    const { isLoading, mutate } = useRegisterData();
+    const { isLoading, mutate } = useRegisterData({ message, loadingBar, router });
 
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
-            if (!errors) {
-                mutate(formValue.value);
-                message.success("Submitted successfully!");
-            } else {
-                message.error("Fill the fields correctly!");
-            }
+            if (errors) return;
+            loadingBar.start();
+            mutate(formValue.value);
         });
     }
 </script>

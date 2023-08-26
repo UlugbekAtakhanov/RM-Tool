@@ -39,7 +39,7 @@
                         </n-form-item>
 
                         <n-form-item class="flex">
-                            <n-button type="primary" class="!px-12 flex-1" @click="handleSubmit">Reset password</n-button>
+                            <n-button :disable="isLoading" type="primary" class="!px-12 flex-1" @click="handleSubmit">Reset password</n-button>
                         </n-form-item>
                     </div>
                 </n-form>
@@ -53,11 +53,15 @@
 
 <script setup>
     import { ref } from "vue";
-    import { useMessage } from "naive-ui";
-    import { useRegisterData } from "../hooks/useRegisterHooks";
+    import { useRouter } from "vue-router";
+    import { useLoadingBar, useMessage } from "naive-ui";
+    import { useResetPasswordData } from "../hooks/useRegisterHooks";
+
+    const message = useMessage();
+    const loadingBar = useLoadingBar();
+    const router = useRouter();
 
     const formRef = ref(null);
-    const message = useMessage();
 
     const formValue = ref({
         password: "",
@@ -87,17 +91,13 @@
         },
     };
 
-    const { isLoading, mutate } = useRegisterData();
+    const { isLoading, mutate } = useResetPasswordData({ message, loadingBar, router });
 
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
-            if (!errors) {
-                mutate(formValue.value);
-                message.success("Submitted successfully!");
-            } else {
-                message.error("Fill the fields correctly!");
-            }
+            if (errors) return;
+            mutate(formValue.value);
         });
     }
 </script>

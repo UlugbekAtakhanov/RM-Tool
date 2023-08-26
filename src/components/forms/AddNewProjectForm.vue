@@ -2,41 +2,23 @@
     <div class="bg-white mx-auto rounded-lg">
         <h1 class="text-2xl text-center font-semibold mb-8">Add new project</h1>
         <n-form ref="formRef" :label-width="80" :model="formValue" :rules="rules" size="medium" class="grid grid-cols-2 gap-x-4">
-            <n-form-item label="Project name" label-style="font-weight: 600" path="name">
-                <n-input v-model:value="formValue.name" placeholder="Project name" />
-            </n-form-item>
+            <FormInput label="Project name" v-model:value="formValue.name" path="name" placeholder="Project name" />
 
-            <n-form-item label="Project type" label-style="font-weight: 600" path="type">
-                <n-select type="select" v-model:value="formValue.company" :options="projectTypeOptions" />
-            </n-form-item>
+            <FormSelect label="Project type" v-model:value="formValue.type" path="type" :options="projectTypeOptions" />
 
-            <n-form-item label="Fiscal Year" label-style="font-weight: 600" path="fiscalYear">
-                <n-date-picker v-model:value="formValue.fiscalYear" class="w-full" type="year" clearable @keydown.enter.prevent />
-            </n-form-item>
+            <FormDatePicker label="Year end" v-model:value="formValue.ye" path="ye" placeholder="Year end" />
 
-            <n-form-item label="Company " label-style="font-weight: 600" path="company">
-                <n-select type="select" v-model:value="formValue.company" :options="companyOptions" />
-            </n-form-item>
+            <FormSelect label="Company" v-model:value="formValue.company" path="company" :options="companyOptions" />
 
-            <n-form-item label="Partner " label-style="font-weight: 600" path="partner">
-                <n-select type="select" v-model:value="formValue.partner" :options="companyOptions" />
-            </n-form-item>
+            <FormSelect label="Partner" v-model:value="formValue.partner" path="partner" :options="companyOptions" />
 
-            <n-form-item label="Quality Review Partner (QRP) " label-style="font-weight: 600" path="qrp">
-                <n-select type="select" v-model:value="formValue.qrp" :options="companyOptions" />
-            </n-form-item>
+            <FormSelect label="Quality Review Partner (QRP)" v-model:value="formValue.qrp" path="qrp" :options="companyOptions" />
 
-            <n-form-item label="Director " label-style="font-weight: 600" path="director">
-                <n-select type="select" v-model:value="formValue.director" :options="companyOptions" />
-            </n-form-item>
+            <FormSelect label="Director" v-model:value="formValue.director" path="director" :options="companyOptions" />
 
-            <n-form-item label="Manager " label-style="font-weight: 600" path="manager">
-                <n-select type="select" v-model:value="formValue.manager" :options="companyOptions" />
-            </n-form-item>
+            <FormSelect label="Manager" v-model:value="formValue.manager" path="manager" :options="companyOptions" />
 
-            <n-form-item label="Team " label-style="font-weight: 600" path="team">
-                <n-select v-model:value="formValue.team" multiple :options="options" @keydown.enter.prevent />
-            </n-form-item>
+            <FormSelect label="Team keys" v-model:value="formValue.teamKeys" path="teamKeys" :options="companyOptions" :multiple="true" />
 
             <n-form-item label="Range" label-style="font-weight: 600" path="range">
                 <n-date-picker
@@ -50,56 +32,48 @@
                 />
             </n-form-item>
 
-            <n-form-item label="Color" label-style="font-weight: 600" path="color">
+            <!-- <n-form-item label="Color" label-style="font-weight: 600" path="color">
                 <n-color-picker v-model:value="formValue.color" :actions="['clear']" />
-            </n-form-item>
+            </n-form-item> -->
 
             <n-form-item class="!flex !justify-center col-span-2">
-                <n-button type="primary" class="!px-12" @click="handleSubmit"> Add </n-button>
+                <n-button :disabled="isLoading" type="primary" class="!px-12" @click="handleSubmit"> Add </n-button>
             </n-form-item>
         </n-form>
     </div>
-    <!-- <div class="flex justify-center fixed top-0 left-0 bg-white">
+    <div class="flex justify-center bg-white">
         <pre>{{ JSON.stringify(formValue, null, 2) }}</pre>
-    </div> -->
+    </div>
 </template>
 
 <script setup>
     import { ref } from "vue";
-    import { useMessage } from "naive-ui";
+    import { useLoadingBar, useMessage } from "naive-ui";
     import { millisecondsInDays } from "../../utils/Days";
+    import FormInput from "./FormInput.vue";
+    import FormSelect from "./FormSelect.vue";
+    import FormDatePicker from "./FormDatePicker.vue";
+    import { useAddProjectData } from "../../hooks/useProjectsHooks";
+
+    const message = useMessage();
+    const loadingBar = useLoadingBar();
+
+    const { isLoading, mutate } = useAddProjectData({ message, loadingBar });
 
     const formRef = ref(null);
-    const message = useMessage();
     const formValue = ref({
         name: "",
         type: "",
-        fiscalYear: null,
+        ye: null,
         company: "",
         partner: "",
         qrp: "",
         director: "",
         manager: "",
-        team: [], // this may cause trouble
+        teamKeys: [], // this may cause trouble
         range: null,
-        color: "",
+        // color: "",
     });
-
-    const options = [
-        {
-            label: "Everybody's Got Something to Hide Except Me and My Monkey",
-            value: "song0",
-            disabled: true,
-        },
-        {
-            label: "Drive My Car",
-            value: "song1",
-        },
-        {
-            label: "Norwegian Wood",
-            value: "song2",
-        },
-    ];
 
     const projectTypeOptions = [
         {
@@ -109,6 +83,10 @@
         {
             label: "Review",
             value: "review",
+        },
+        {
+            label: "Other",
+            value: "other",
         },
     ];
 
@@ -139,7 +117,7 @@
             message: "Please provide a project type.",
             trigger: ["blur", "input"],
         },
-        fiscalYear: {
+        ye: {
             required: true,
             validator(rule, value) {
                 if (!value) {
@@ -169,7 +147,7 @@
             message: "Please provide a manager name.",
             trigger: ["blur", "input"],
         },
-        team: {
+        teamKeys: {
             required: true,
             validator(rule, value) {
                 if (!value.length) {
@@ -189,32 +167,30 @@
             },
             trigger: ["blur", "input"],
         },
-        color: {
-            required: true,
-            validator(rule, value) {
-                if (!value) {
-                    return new Error("Choose color for project.");
-                }
-                return true;
-            },
-            trigger: ["blur", "input"],
-        },
+        // color: {
+        //     required: true,
+        //     validator(rule, value) {
+        //         if (!value) {
+        //             return new Error("Choose color for project.");
+        //         }
+        //         return true;
+        //     },
+        //     trigger: ["blur", "input"],
+        // },
     };
 
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
-            if (!errors) {
-                const from = formValue.value.range[0];
-                const to = formValue.value.range[1];
-                const duration = millisecondsInDays(to) - millisecondsInDays(from);
-                const data = { ...formValue.value, range: { from, to, duration } };
-                console.log(data);
-                message.success("Submitted successfully!");
-            } else {
-                console.log(errors);
-                message.error("Fill the fields correctly!");
-            }
+            if (errors) return;
+            const startDate = formValue.value.range[0];
+            const endDate = formValue.value.range[1];
+            const duration = millisecondsInDays(endDate) - millisecondsInDays(startDate);
+            const color = formValue.value.type === "audit" ? "#0ea5e9" : formValue.value.type === "review" ? "#e11d48" : "#16a34a";
+            const data = { ...formValue.value, startDate, endDate, duration, color };
+            const { range, ...rest } = data;
+            loadingBar.start();
+            mutate(rest);
         });
     }
 </script>

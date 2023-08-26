@@ -20,7 +20,7 @@
     import TableLeft from "../components/gant-page/table2/TableLeft.vue";
     import TableRight from "../components/gant-page/table2/TableRight.vue";
     import Modal from "../components/Modal.vue";
-    import AddNewProjectForm from "../components/forms-page/AddNewProjectForm.vue";
+    import AddNewProjectForm from "../components/forms/AddNewProjectForm.vue";
     import DatePicker from "../components/gant-page/DatePicker.vue";
     import { storeToRefs } from "pinia";
     import { useUserStore } from "../store/userStore";

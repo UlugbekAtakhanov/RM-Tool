@@ -10,12 +10,18 @@
         :row-key="(row) => row.key"
         @update:checked-row-keys="handleCheck"
         :row-props="rowProps"
+        @update:page="handlePageChange"
     />
 </template>
 
 <script setup>
     import { NInput } from "naive-ui";
     import { defineComponent, h, nextTick, reactive, ref } from "vue";
+
+    // const message = useMessage();
+    // const lodaingBar = useLoadingBar();
+
+    // const {} = useGetCompaniesListData({ lodaingBar });
 
     // props
     const { data } = defineProps({ checkedRowKeysRef: Array, data: Array });
@@ -187,5 +193,9 @@
                 // message.info(row.name);
             },
         };
+    };
+
+    const handlePageChange = () => {
+        console.log("page is changed");
     };
 </script>

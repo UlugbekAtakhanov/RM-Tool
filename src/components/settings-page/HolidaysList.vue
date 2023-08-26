@@ -3,8 +3,8 @@
         <h1 id="holidays-list" class="mb-8 rounded-md text-xl font-semibold text-primary">Holidays List</h1>
 
         <!-- modal -->
-        <div class="mb-2 flex gap-2">
-            <Modal buttonTitle="Add holiday">
+        <div class="mb-2 flex gap-2" v-show="!disabledState">
+            <Modal buttonTitle="Add holiday" :disabledState="disabledState">
                 <AddNewHolidayForm />
             </Modal>
             <n-button
@@ -35,11 +35,19 @@
 
 <script setup>
     import { useMessage } from "naive-ui";
-    import { computed, ref, toRef } from "vue";
+    import { computed, ref } from "vue";
     import Modal from "../../components/Modal.vue";
-    import AddNewHolidayForm from "../../components/forms-page/AddNewHolidayForm.vue";
+    import AddNewHolidayForm from "../../components/forms/AddNewHolidayForm.vue";
     import { useHolidaysStore } from "../../store/holidaysStore";
     import { storeToRefs } from "pinia";
+    import { useUserStore } from "../../store/userStore";
+
+    const userStore = useUserStore();
+    const { user } = storeToRefs(userStore);
+
+    const disabledState = computed(() => {
+        return ["super-super-admin", "super-admin", "admin"].includes(user.value);
+    });
 
     const message = useMessage();
 
@@ -88,8 +96,8 @@
             key: "date",
         },
     ];
-
     const columns = createColumns();
+
 
     const rowProps = (row) => {
         return {

@@ -26,7 +26,7 @@
     import { useMessage } from "naive-ui";
     import Modal from "../components/Modal.vue";
     import CompaniesTable from "../components/companies-page/table/CompaniesTable.vue";
-    import AddNewCompanyForm from "../components/forms-page/AddNewCompanyForm.vue";
+    import AddNewCompanyForm from "../components/forms/AddNewCompanyForm.vue";
     import { useCompaniesListStore } from "../store/companiesListStore";
     import { toRef, computed, ref } from "vue";
     import { storeToRefs } from "pinia";

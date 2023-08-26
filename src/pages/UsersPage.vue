@@ -3,7 +3,7 @@
         <h1 class="text-2xl font-semibold text-center p-4 text-primary rounded-md">Users</h1>
         <div class="mb-2 px-2 flex gap-2">
             <Modal buttonTitle="Add user">
-                <AddNewStaffForm />
+                <AddNewUsersForm />
             </Modal>
             <n-button
                 ghost
@@ -24,7 +24,7 @@
 
 <script setup>
     import Modal from "../components/Modal.vue";
-    import AddNewStaffForm from "../components/forms-page/AddNewStaffForm.vue";
+    import AddNewUsersForm from "../components/forms/AddNewUsersForm.vue";
     import UsersTable from "../components/users-page/table/UsersTable.vue";
     import { ref, toRef, computed } from "vue";
     import { useUsersListStore } from "../store/usersListStore";

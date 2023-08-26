@@ -21,11 +21,11 @@
                         </n-form-item>
 
                         <n-form-item class="flex">
-                            <n-button type="primary" class="!px-12 flex-1" @click="handleSubmit"> Sign in</n-button>
+                            <n-button :disabled="isLoading" type="primary" class="!px-12 flex-1" @click="handleSubmit"> Sign in</n-button>
                         </n-form-item>
                     </div>
 
-                    <!-- forgot password -->
+                    <!-- forgot password of sign up links -->
                     <RouterLink
                         :to="{ name: 'forgot-password' }"
                         class="text-sm font-bold flex items-center justify-center gap-4 hover:text-[#6080F1] text-[#6080F1]/80"
@@ -56,12 +56,13 @@
 </template>
 
 <script setup>
+    import { useLoadingBar, useMessage } from "naive-ui";
     import { ref } from "vue";
-    import { useMessage } from "naive-ui";
-    import { useRegisterData } from "../hooks/useRegisterHooks";
+    import { useLoginData } from "../hooks/useRegisterHooks";
 
     const formRef = ref(null);
     const message = useMessage();
+    const loadingBar = useLoadingBar();
 
     const formValue = ref({
         email: "",
@@ -92,17 +93,14 @@
         },
     };
 
-    const { isLoading, mutate } = useRegisterData();
+    const { isLoading, mutate } = useLoginData({ message, loadingBar });
 
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
-            if (!errors) {
-                mutate(formValue.value);
-                message.success("Submitted successfully!");
-            } else {
-                message.error("Fill the fields correctly!");
-            }
+            if (errors) return;
+            loadingBar.start();
+            mutate(formValue.value);
         });
     }
 </script>

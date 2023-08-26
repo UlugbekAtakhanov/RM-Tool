@@ -30,7 +30,7 @@
                         </n-form-item>
 
                         <n-form-item class="flex">
-                            <n-button type="primary" class="!px-12 flex-1" @click="handleSubmit">Get an Email</n-button>
+                            <n-button :disabled="isLoading" type="primary" class="!px-12 flex-1" @click="handleSubmit">Get an Email</n-button>
                         </n-form-item>
                     </div>
                 </n-form>
@@ -43,12 +43,14 @@
 </template>
 
 <script setup>
+    import { useLoadingBar, useMessage } from "naive-ui";
     import { ref } from "vue";
-    import { useMessage } from "naive-ui";
-    import { useRegisterData } from "../hooks/useRegisterHooks";
+    import { useForgotPasswordData } from "../hooks/useRegisterHooks";
+
+    const message = useMessage();
+    const loadingBar = useLoadingBar();
 
     const formRef = ref(null);
-    const message = useMessage();
 
     const formValue = ref({
         email: "",
@@ -73,17 +75,13 @@
         },
     };
 
-    const { isLoading, mutate } = useRegisterData();
+    const { isLoading, mutate } = useForgotPasswordData({ message, loadingBar });
 
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
-            if (!errors) {
-                mutate(formValue.value);
-                message.success("Submitted successfully!");
-            } else {
-                message.error("Fill the fields correctly!");
-            }
+            if (errors) return;
+            mutate(formValue.value);
         });
     }
 </script>

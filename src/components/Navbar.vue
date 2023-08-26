@@ -8,34 +8,42 @@
         <div class="ml-auto divide-x-[1px] flex items-center">
             <RouterLink class="px-4" :to="{ name: 'login' }">Login</RouterLink>
             <RouterLink class="px-4" :to="{ name: 'register' }">Register</RouterLink>
+
+            <div class="px-4">
+                <n-badge class="cursor-pointer group" value="1" color="#0ea5e9" :max="10" :offset="[-5, 3]">
+                    <n-avatar class="!bg-transparent">
+                        <n-icon> <i class="fa-solid fa-bell text-gray-400 text-2xl group-hover:text-gray-500"></i> </n-icon>
+                    </n-avatar>
+                </n-badge>
+            </div>
+
+            <!-- dropdown -->
+            <div>
+                <n-dropdown trigger="click" :options="options">
+                    <n-button quaternary>
+                        <n-avatar round size="small" src="" />
+                    </n-button>
+                </n-dropdown>
+            </div>
         </div>
-
-        <n-badge class="cursor-pointer group" value="1" color="#0ea5e9" :max="10" :offset="[-5, 3]">
-            <n-avatar class="!bg-transparent">
-                <n-icon> <i class="fa-solid fa-bell text-gray-400 text-2xl group-hover:text-gray-500"></i> </n-icon>
-            </n-avatar>
-        </n-badge>
-
-        <!-- dropdown -->
-        <n-dropdown trigger="click" :options="options">
-            <n-button quaternary>
-                <n-avatar class="px-4" round size="small" src="" />
-            </n-button>
-        </n-dropdown>
     </div>
 </template>
 
 <script setup>
+    import { LockClosedOutline } from "@vicons/ionicons5";
+    import { NIcon } from "naive-ui";
+    import { storeToRefs } from "pinia";
     import { h } from "vue";
     import { RouterLink } from "vue-router";
     import { useUserStore } from "../store/userStore";
-    import { storeToRefs } from "pinia";
-    import { NIcon } from "naive-ui";
-    import { LockClosedOutline, SettingsOutline } from "@vicons/ionicons5";
+    import { addToLS, removeFromLS } from "../utils/localStorage";
+
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
 
     const selectHandler = (value) => {
+        removeFromLS("userRole");
+        addToLS("userRole", value);
         userStore.setUser(value);
     };
 

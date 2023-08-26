@@ -7,7 +7,7 @@ export const useHolidaysStore = defineStore("holidays-list", {
             {
                 id: 0,
                 name: "Holiday 0",
-                date: format(new Date("2023-07-06"), "EEE MMM dd, yyyy"),
+                date: format(new Date("2023-07-22"), "EEE MMM dd, yyyy"),
             },
             {
                 id: 1,
@@ -22,7 +22,7 @@ export const useHolidaysStore = defineStore("holidays-list", {
             {
                 id: 3,
                 name: "Holiday 3",
-                date: format(new Date("2023-07-08"), "EEE MMM dd, yyyy"),
+                date: format(new Date("2023-07-18"), "EEE MMM dd, yyyy"),
             },
         ],
     }),

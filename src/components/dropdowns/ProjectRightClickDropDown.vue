@@ -12,14 +12,14 @@
 
     <!-- request resource modal -->
     <RequestResourceModal :isModalOpen="isModalOpen" v-model:show="isModalOpen">
-        <AddNewStaffForm />
+        <AddNewUsersForm />
     </RequestResourceModal>
 </template>
 
 <script setup>
     import { defineProps, defineEmits } from "vue";
     import RequestResourceModal from "../modals/RequestResourceModal.vue";
-    import AddNewStaffForm from "../forms-page/AddNewStaffForm.vue";
+    import AddNewUsersForm from "../forms/AddNewUsersForm.vue";
     import { ref } from "vue";
 
     const isModalOpen = ref(false);
@@ -36,7 +36,7 @@
     const clickOutsideHandler = () => {
         emit("onClickoutside");
     };
-    
+
     const handleSelectHandler = (key) => {
         emit("handleSelect", key);
     };
