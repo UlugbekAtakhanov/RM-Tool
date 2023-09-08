@@ -1,6 +1,6 @@
 <template>
     <n-space vertical class="overflow-y-scroll">
-        <n-layout has-sider class="h-screen">
+        <n-layout has-sider class="h-screen backdrop-blur-xl" style="background-color: transparent;">
             <n-layout-sider
                 bordered
                 collapse-mode="width"
@@ -10,6 +10,7 @@
                 show-trigger
                 @collapse="collapsed = true"
                 @expand="collapsed = false"
+                style="background-color: rgba(255, 255, 255, 0.7);"
             >
                 <div class="h-full overflow-y-scroll relative">
                     <n-menu
@@ -22,7 +23,7 @@
                     />
                 </div>
             </n-layout-sider>
-            <n-layout class="mb-">
+            <n-layout style="background-color: transparent">
                 <RouterView />
             </n-layout>
         </n-layout>
@@ -45,6 +46,7 @@
     import { RouterLink } from "vue-router";
     import { useUserStore } from "../store/userStore";
     import { storeToRefs } from "pinia";
+    import { includesWithin } from "../utils/includesWithin";
 
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
@@ -80,7 +82,7 @@
                     { default: () => "Projects" }
                 ),
             key: "projects",
-            show: !["super-super-admin", "super-admin", "admin"].includes(user.value),
+            show: !includesWithin(user.value, ["SUPER_SUPER_ADMIN", "SUPER_ADMIN", "ADMIN"]),
             icon: renderIcon(BarChartOutline),
         },
         {
@@ -126,7 +128,7 @@
                             },
                             { default: () => "Resources" }
                         ),
-                    show: !["super-super-admin", "super-admin", "admin"].includes(user.value),
+                    show: !includesWithin(user.value, ["SUPER_SUPER_ADMIN", "SUPER_ADMIN", "ADMIN"]),
                     key: "resources",
                 },
             ],

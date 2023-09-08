@@ -30,7 +30,9 @@
         {
             type: "selection",
             disabled(row) {
-                return row.name === "Edward King 3";
+                if (row.roles) {
+                    return row.roles.includes("SUPER_SUPER_ADMIN");
+                }
             },
         },
         {
@@ -39,11 +41,11 @@
         },
         {
             title: "Role",
-            key: "role",
+            key: "roles",
         },
         {
             title: "Coach",
-            key: "coach",
+            key: "coachName",
         },
         {
             title: "Email",
@@ -70,7 +72,7 @@
         return {
             style: "cursor: pointer;",
             onClick: (e) => {
-                console.log(e);
+                // console.log(e);
                 // message.info(row.name);
             },
         };

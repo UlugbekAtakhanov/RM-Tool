@@ -1,53 +1,42 @@
 <template>
-    <div class="transition-all duration-300" :class="isOpen ? 'w-[500px]' : 'w-[140px]'">
-        <table class="bg-white text-xs border-b">
+    <div class="transition-all duration-300" :class="isOpen ? 'w-[800px]' : 'w-[200px]'">
+        <table class="bg-white text-xs border-b w-[800px]">
             <thead>
                 <tr class="border-b whitespace-nowrap h-[33px] bg-purple-50">
                     <th class="px-1 cursor-pointer hover:bg-purple-100" @click="isOpen = !isOpen">
                         <i class="fa-solid fa-chevron-left fa-flip w-4" style="--fa-animation-duration: 3s"></i>
                     </th>
-                    <th class="text-left pr-10">Resource name</th>
-                    <th class="text-left pr-10">Position</th>
-                    <th class="text-left pr-10">Coach</th>
-                    <th class="text-left pr-10">Projects</th>
-                    <th class="text-center px-2">Hours</th>
+                    <th class="text-left">Resource name</th>
+                    <th class="text-left">Position</th>
+                    <th class="text-left">Coach</th>
+                    <th class="text-left">Projects</th>
+                    <th class="text-center px-4">Hours</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in resourceListComputed" :key="item.id" class="hover:bg-sky-50 divide-y text-center group">
                     <td class="text-xs align-top">{{ index + 1 }}</td>
-                    <td class="text-left w-[150px] align-top">{{ item.name }}</td>
+                    <td class="text-left align-top pr-4">{{ item.firstName }} {{ item.lastName }}</td>
 
-                    <td class="text-left w-[150px] align-top">{{ item.position }}</td>
-
-                    <td class="text-left w-[150px] align-top">{{ item.coach }}</td>
-
-                    <td class="text-left w-[150px]">
+                    <td class="text-left pr-4">
                         <div v-for="project in item.projects" :key="project.id" class="h-[33px]">
-                            {{ project.name }}
+                            {{ project.role }}
                         </div>
                     </td>
 
-                    <td class="text-left w-[150px]">
+                    <td class="text-left align-top pr-4">{{ item.coachName }}</td>
+
+                    <td class="text-left pr-4">
+                        <div v-for="project in item.projects" :key="project.id" class="h-[33px]">
+                            {{ project.projectName }}
+                        </div>
+                    </td>
+
+                    <td class="text-center">
                         <div v-for="project in item.projects" :key="project.id" class="h-[33px] text-center">
                             {{ project.hours }}
                         </div>
                     </td>
-
-                    <!-- <td :colspan="arrOfDays.length">
-                        <div class="bg-white group-hover:bg-sky-50" :style="{ width: arrOfDays.length * 80 + 'px' }">
-                            <div v-for="(project, index) in item.projects" class="h-[33px] flex relative">
-                                <div
-                                    v-for="(day, index) in arrOfDays"
-                                    :data-index="index"
-                                    :key="index"
-                                    class="border-r -translate-x-[1px] w-[80px] group-hover:bg-sky-50"
-                                    :class="day.isWeekends ? 'bg-sky-50' : ''"
-                                ></div>
-                                <Gantline1 :item="project" :index="index" />
-                            </div>
-                        </div>
-                    </td> -->
                 </tr>
             </tbody>
         </table>
@@ -55,35 +44,26 @@
 </template>
 
 <script setup>
-    import { ref, computed } from "vue";
-    import { useProjectListStore } from "../../../store/projectStore";
-    import { useDateRangeStore } from "../../../store/dateRangeStore";
     import { storeToRefs } from "pinia";
-    import { format } from "date-fns";
-    import { daysWithWeekends, daysInMilliseconds } from "../../../utils/Days";
-    import Gantline1 from "./GantLine1.vue";
+    import { computed, ref } from "vue";
+    import { useDateRangeStore } from "../../../store/dateRangeStore";
+    import { useProjectListStore } from "../../../store/projectStore";
+    import { daysInMilliseconds } from "../../../utils/Days";
 
-    const { resourceList: list } = useProjectListStore();
-    const resourceList = ref(list);
+    const projectListStore = useProjectListStore();
+    const { resourcesWithProjecstsList } = storeToRefs(projectListStore);
 
     const dateRangeStore = useDateRangeStore();
-    const { startDate, endDate } = storeToRefs(dateRangeStore);
-
-    // create arr of days
-    const arrOfDays = computed(() => {
-        const start = format(new Date(startDate.value), "yyyy-MM-dd");
-        const end = format(new Date(endDate.value), "yyyy-MM-dd");
-        return daysWithWeekends(start, end);
-    });
+    const { startDate } = storeToRefs(dateRangeStore);
 
     // modify project list giving new keys - startPoint, duration
     const resourceListComputed = computed(() => {
-        const newList = resourceList.value.map((project) => {
+        const newList = resourcesWithProjecstsList.value.map((project) => {
             const newProjects = project.projects.map((item) => {
                 return {
                     ...item,
-                    startPoint: (new Date(item.from) - new Date(startDate.value)) / daysInMilliseconds(1),
-                    duration: (new Date(item.to) - new Date(item.from)) / daysInMilliseconds(1),
+                    startPoint: (new Date(item.startDate) - new Date(startDate.value)) / daysInMilliseconds(1),
+                    duration: (new Date(item.endDate) - new Date(item.startDate)) / daysInMilliseconds(1),
                 };
             });
             return { ...project, projects: newProjects };

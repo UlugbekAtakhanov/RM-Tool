@@ -1,6 +1,6 @@
 <template>
     <n-form-item :label="label" label-style="font-weight: 600" :path="path">
-        <n-select type="select" @update:value="onChange" :options="options" :multiple="multiple" />
+        <n-select type="select" @update:value="onChange" :options="options" :filterable="filterable" :multiple="multiple" />
     </n-form-item>
 </template>
 
@@ -8,6 +8,7 @@
     defineProps({
         label: { type: String, required: true, default: "" },
         path: { type: String, required: true, default: "" },
+        filterable: { type: Boolean, required: false, default: false },
         options: { type: Array, required: true, default: [] },
         multiple: { type: Boolean, required: false, default: false },
     });

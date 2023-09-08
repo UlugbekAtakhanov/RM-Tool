@@ -1,7 +1,7 @@
 <template>
     <div class="h-screen flex justify-center items-center flex-col">
         <h1 class="text-3xl text-center mb-8 text-primary font-bold">RM Tool</h1>
-        <div class="bg-white w-[600px] rounded-2xl shadow">
+        <div class="bg-white/60 backdrop-blur-xl w-[600px] rounded-2xl shadow">
             <div class="flex">
                 <!-- img -->
                 <div class="flex-1">
@@ -21,15 +21,16 @@
                         </n-form-item>
 
                         <n-form-item class="flex">
-                            <n-button :disabled="isLoading" type="primary" class="!px-12 flex-1" @click="handleSubmit"> Sign in</n-button>
+                            <n-button :disabled="userIsLoading" type="primary" class="!px-12 flex-1" @click="handleSubmit"> Sign in</n-button>
                         </n-form-item>
                     </div>
 
                     <!-- forgot password of sign up links -->
                     <RouterLink
                         :to="{ name: 'forgot-password' }"
-                        class="text-sm font-bold flex items-center justify-center gap-4 hover:text-[#6080F1] text-[#6080F1]/80"
+                        class="text-sm font-bold flex items-center justify-center gap-4 hover:text-secondary text-secondary/80"
                     >
+                        <!-- class="text-sm font-bold flex items-center justify-center gap-4 hover:text-[#6080F1] text-[#6080F1]/80" -->
                         <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M0.666668 8.2C0.666668 7.07989 0.666668 6.51984 0.884655 6.09202C1.0764 5.71569 1.38236 5.40973 1.75869 5.21799C2.18651 5 2.74656 5 3.86667 5H8.13333C9.25344 5 9.81349 5 10.2413 5.21799C10.6176 5.40973 10.9236 5.71569 11.1153 6.09202C11.3333 6.51984 11.3333 7.0799 11.3333 8.2V8.2C11.3333 9.88016 11.3333 10.7202 11.0064 11.362C10.7187 11.9265 10.2598 12.3854 9.69531 12.673C9.05357 13 8.21349 13 6.53333 13H5.46667C3.78651 13 2.94643 13 2.3047 12.673C1.74021 12.3854 1.28127 11.9265 0.993648 11.362C0.666668 10.7202 0.666668 9.88016 0.666668 8.2V8.2Z"
@@ -49,21 +50,28 @@
                 </n-form>
             </div>
         </div>
-        <div class="flex justify-center absolute top-4 left-4">
+        <!-- <div class="flex justify-center absolute top-4 left-4">
             <pre>{{ JSON.stringify(formValue, null, 2) }}</pre>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script setup>
     import { useLoadingBar, useMessage } from "naive-ui";
     import { ref } from "vue";
-    import { useLoginData } from "../hooks/useRegisterHooks";
+    import { useRouter } from "vue-router";
+    import { useUserStore } from "../store/userStore";
+    import { storeToRefs } from "pinia";
 
-    const formRef = ref(null);
     const message = useMessage();
     const loadingBar = useLoadingBar();
+    const router = useRouter();
 
+    const userStore = useUserStore();
+    const { userIsLoading } = storeToRefs(userStore);
+    const { userLogin } = userStore;
+
+    const formRef = ref(null);
     const formValue = ref({
         email: "",
         password: "",
@@ -93,14 +101,12 @@
         },
     };
 
-    const { isLoading, mutate } = useLoginData({ message, loadingBar });
-
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
             if (errors) return;
             loadingBar.start();
-            mutate(formValue.value);
+            userLogin({ data: formValue.value, router, message, loadingBar });
         });
     }
 </script>

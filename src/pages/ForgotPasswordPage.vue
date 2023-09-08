@@ -36,9 +36,9 @@
                 </n-form>
             </div>
         </div>
-        <div class="flex justify-center absolute top-4 left-4">
+        <!-- <div class="flex justify-center absolute top-4 left-4">
             <pre>{{ JSON.stringify(formValue, null, 2) }}</pre>
-        </div>
+        </div> -->
     </div>
 </template>
 

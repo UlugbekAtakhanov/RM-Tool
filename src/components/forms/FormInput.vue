@@ -1,11 +1,12 @@
 <template>
     <n-form-item :label="label" label-style="font-weight: 600" :path="path">
-        <n-input @input="onChange" :placeholder="placeholder" />
+        <n-input :type="type" @input="onChange" :placeholder="placeholder" />
     </n-form-item>
 </template>
 
 <script setup>
-    defineProps({
+    const props = defineProps({
+        type: { type: String, required: false, default: "text" },
         label: { type: String, required: true, default: "" },
         path: { type: String, required: true, default: "" },
         placeholder: { type: String, required: true, default: "" },

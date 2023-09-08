@@ -13,6 +13,12 @@
     </n-button>
     <n-modal v-model:show="showModal">
         <n-card style="width: 75%" :bordered="false" role="dialog" aria-modal="true">
+            <div
+                @click="showModal = false"
+                class="hover:border hover:bg-purple-50 cursor-pointer ml-auto w-5 h-5 flex justify-center items-center rounded"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </div>
             <slot />
         </n-card>
     </n-modal>
@@ -22,14 +28,20 @@
     import { h, ref } from "vue";
     import { NIcon } from "naive-ui";
     import { AddOutline } from "@vicons/ionicons5";
+    import { useShowModalStore } from "../store/showModalStore";
+    import { storeToRefs } from "pinia";
 
-    const { buttonTitle, disabledState } = defineProps({ buttonTitle: String, disabledState: Boolean });
+    const showModalStore = useShowModalStore();
+    const { showModal } = storeToRefs(showModalStore);
+
+    defineProps({
+        buttonTitle: String,
+        disabledState: Boolean,
+    });
 
     const addIcon = () => {
         return h(NIcon, null, {
             default: () => h(AddOutline),
         });
     };
-
-    const showModal = ref(false);
 </script>

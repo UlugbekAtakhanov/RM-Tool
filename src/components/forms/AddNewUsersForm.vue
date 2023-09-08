@@ -8,112 +8,89 @@
 
             <FormInput label="Business name" v-model:value="formValue.businessName" path="businessName" placeholder="Business name" />
 
-            <FormInput label="Email" v-model:value="formValue.email" path="email" placeholder="Email" />
+            <FormInput type="email" label="Email" v-model:value="formValue.email" path="email" placeholder="Email" />
 
-            <FormSelect label="Role" v-model:value="formValue.role" path="role" placeholder="Role" :options="roleOptions" />
-
-            <FormSelect label="Company" v-model:value="formValue.company" path="company" placeholder="Company" :options="companyOptions" />
+            <FormSelect label="Role" v-model:value="formValue.role" path="role" placeholder="Role" :options="computedRoleOptions" />
 
             <FormInput
                 label="Line of service"
                 v-model:value="formValue.lineOfService"
-                v-show="formValue.role === 'staff'"
+                v-show="formValue.role === 'STAFF'"
                 path="line-of-service"
                 placeholder="Line of service"
             />
 
             <FormSelect
+                filterable
                 label="Coach"
-                v-show="formValue.role === 'staff'"
-                v-model:value="formValue.coach"
-                path="coach"
+                v-show="formValue.role === 'STAFF'"
+                v-model:value="formValue.coachId"
+                path="coachId"
                 placeholder="Coach"
-                :options="companyOptions"
+                :options="computedCoachOptions"
             />
 
             <FormSelect
-                label="Type"
-                v-show="formValue.role === 'staff'"
-                v-model:value="formValue.type"
-                path="type"
-                placeholder="Type"
-                :options="typeOptions"
+                v-show="formValue.role === 'SUPER_ADMIN' || formValue.role === 'ADMIN'"
+                :filterable="true"
+                label="Company"
+                v-model:value="formValue.companyId"
+                path="company"
+                :options="computedCompanyOptions"
             />
-
-            <!-- projects allocation -->
-            <n-form-item v-show="formValue.role === 'staff'" label="Projects" label-style="font-weight: 600" class="col-span-2">
-                <n-dynamic-input v-model:value="formValue.projects" #="{ index, value }" :on-create="onCreate">
-                    <div style="display: flex; align-items: flex-start; width: 100%" class="gap-2">
-                        <n-form-item ignore-path-change :show-label="false" :path="`projects[${index}].name`" class="flex-1">
-                            <n-select v-model:value="formValue.projects[index].name" :options="companyOptions" />
-                        </n-form-item>
-
-                        <n-form-item ignore-path-change :show-label="false" :path="`projects[${index}].allocation`" class="flex-1">
-                            <n-input
-                                type="number"
-                                v-model:value="formValue.projects[index].allocation"
-                                placeholder="Time allocation"
-                                @keydown.enter.prevent
-                            />
-                        </n-form-item>
-
-                        <n-date-picker
-                            v-model:value="formValue.projects[index].range"
-                            type="daterange"
-                            clearable
-                            @keydown.enter.preventj
-                            update-value-on-close
-                            :actions="null"
-                            class="flex-[2]"
-                            :show-label="false"
-                        />
-                    </div>
-                </n-dynamic-input>
-            </n-form-item>
 
             <!-- submit button -->
             <n-form-item class="!flex !justify-center col-span-2 mt-2">
-                <n-button :disabled="isLoading" type="primary" class="!px-12" @click="handleSubmit"> Add </n-button>
+                <n-button :disabled="usersIsLoading" type="primary" class="!px-12" @click="handleSubmit"> Add </n-button>
             </n-form-item>
         </n-form>
     </div>
 
-    <div class="flex justify-center">
+    <!-- <div class="flex justify-center">
         <pre>{{ JSON.stringify(formValue, null, 2) }}</pre>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
     import { useLoadingBar, useMessage } from "naive-ui";
     import { storeToRefs } from "pinia";
-    import { ref } from "vue";
+    import { ref, onMounted, computed } from "vue";
     import { useUserStore } from "../../store/userStore";
+    import { useUsersListStore } from "../../store/usersListStore";
+    import { includesWithin } from "../../utils/includesWithin";
     import FormInput from "./FormInput.vue";
     import FormSelect from "./FormSelect.vue";
-    import { useAddUserData } from "../../hooks/useUsersHooks";
+    import { useCompaniesListStore } from "../../store/companiesListStore";
+    import { useShowModalStore } from "../../store/showModalStore";
 
     const message = useMessage();
     const loadingBar = useLoadingBar();
 
+    const companiesListStore = useCompaniesListStore();
+    const { companiesList } = storeToRefs(companiesListStore);
+    const { getCompaniesList } = companiesListStore;
+
+    onMounted(() => getCompaniesList({ loadingBar, message }));
+
+    const usersListStore = useUsersListStore();
+    const { usersIsLoading, usersList } = storeToRefs(usersListStore);
+    const { addNewUser, addNewResource, getUsers } = usersListStore;
+
+    onMounted(() => getUsers({ message, loadingBar }));
+
+    const showModalStore = useShowModalStore();
+    const { closeModal } = showModalStore;
+
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
 
-    const { isLoading, mutate } = useAddUserData({ message, loadingBar });
-
-    // assuming
-    const userStatus = ref(user.value);
-
     const formRef = ref(null);
     const formValue = ref({
-        // common
         firstName: "",
         lastName: "",
         businessName: "",
         email: "",
         role: "",
-        company: "",
-
-        // company
     });
 
     const rules = {
@@ -129,7 +106,15 @@
         },
         email: {
             required: true,
-            message: "Please provide email",
+            validator(rule, value) {
+                if (!value) {
+                    return new Error("Please provide email.");
+                }
+                if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+                    return new Error("Please provide a valid email.");
+                }
+                return true;
+            },
             trigger: ["blur", "input"],
         },
         role: {
@@ -137,9 +122,16 @@
             message: "Choose a role.",
             trigger: ["blur", "input"],
         },
-        company: {
+        companyId: {
             required: true,
-            message: "Choose a company.",
+            validator: (rule, value) => {
+                if (formValue.value.role === "SUPER_ADMIN" || formValue.value.role === "ADMIN") {
+                    if (!value) {
+                        return new Error("Please provide a company");
+                    }
+                    return true;
+                }
+            },
             trigger: ["blur", "input"],
         },
         lineOfService: {
@@ -154,94 +146,65 @@
             },
             trigger: ["blur", "input"],
         },
-        coach: {
-            required: true,
-            validator: (rule, value) => {
-                if (formValue.value.role === "staff") {
-                    if (!value) {
-                        return new Error("Please provide line of service");
-                    }
-                    return true;
-                }
-            },
-            trigger: ["blur", "input"],
-        },
+        // coach: {
+        //     required: true,
+        //     validator: (rule, value) => {
+        //         if (formValue.value.role === "staff") {
+        //             if (!value) {
+        //                 return new Error("Please provide line of service");
+        //             }
+        //             return true;
+        //         }
+        //     },
+        //     trigger: ["blur", "input"],
+        // },
     };
 
-    const companyOptions = [
-        {
-            label: "Project1",
-            value: "song0",
-            disabled: true,
-        },
-        {
-            label: "Project2",
-            value: "song1",
-        },
-        {
-            label: "Project3",
-            value: "song2",
-        },
-    ];
+    // preparing for displaying in select options
+    const computedCompanyOptions = computed(() => companiesList.value.map((company) => ({ label: company.name, value: company.id })));
+    const computedCoachOptions = computed(() => usersList.value.map((user) => ({ label: `${user.firstName} ${user.lastName}`, value: user.id })));
 
     const roleOptions = [
         {
             label: "PKF Admin",
-            value: "super-admin",
-            disabled: !["super-super-admin"].includes(userStatus.value),
+            value: "SUPER_ADMIN",
+            disabled: !includesWithin(user.value, ["SUPER_SUPER_ADMIN"]),
+            show: ["SUPER_SUPER_ADMIN"],
         },
         {
             label: "Client Admin",
-            value: "admin",
-            disabled: !["super-super-admin", "super-admin"].includes(userStatus.value),
+            value: "ADMIN",
+            disabled: !includesWithin(user.value, ["SUPER_SUPER_ADMIN", "SUPER_ADMIN"]),
+            show: ["SUPER_SUPER_ADMIN", "SUPER_ADMIN"],
         },
         {
             label: "Resource Manager",
-            value: "rm",
-            disabled: !["super-super-admin", "admin"].includes(userStatus.value),
+            value: "RESOURCE_MANAGER",
+            disabled: !includesWithin(user.value, ["SUPER_SUPER_ADMIN", "ADMIN"]),
+            show: ["SUPER_SUPER_ADMIN", "ADMIN"],
         },
         {
             label: "Staff",
-            value: "staff",
-            disabled: !["rm"].includes(userStatus.value),
+            value: "STAFF",
+            disabled: !includesWithin(user.value, ["RESOURCE_MANAGER"]),
+            show: ["RESOURCE_MANAGER"],
         },
     ];
 
-    const typeOptions = [
-        {
-            label: "Partner",
-            value: "partner",
-        },
-        {
-            label: "QRP",
-            value: "qrp",
-        },
-        {
-            label: "Director",
-            value: "director",
-        },
-        {
-            label: "Manager",
-            value: "manager",
-        },
-        {
-            label: "Key Staff",
-            value: "key-staff",
-        },
-        {
-            label: "Staff",
-            value: "staff",
-        },
-    ];
+    const computedRoleOptions = roleOptions.filter((item) => includesWithin(user.value, item.show));
 
+    // add new user handler
     function handleSubmit(e) {
         e.preventDefault();
         formRef.value?.validate((errors) => {
             if (errors) return;
             loadingBar.start();
-            mutate(formValue.value);
+            if (formValue.value.role === "STAFF") {
+                const { businessName, role, ...rest } = formValue.value;
+                addNewResource({ data: rest, message, loadingBar, closeModal });
+            } else {
+                addNewUser({ data: formValue.value, message, loadingBar, closeModal });
+            }
         });
     }
-
-    const onCreate = () => ({ name: "", range: null });
 </script>

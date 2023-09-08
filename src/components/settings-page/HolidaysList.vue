@@ -34,32 +34,39 @@
 </template>
 
 <script setup>
-    import { useMessage } from "naive-ui";
-    import { computed, ref } from "vue";
+    import { useLoadingBar, useMessage } from "naive-ui";
+    import { computed, onMounted, ref } from "vue";
     import Modal from "../../components/Modal.vue";
     import AddNewHolidayForm from "../../components/forms/AddNewHolidayForm.vue";
-    import { useHolidaysStore } from "../../store/holidaysStore";
+    import { useHolidaysListStore } from "../../store/holidaysStore";
     import { storeToRefs } from "pinia";
     import { useUserStore } from "../../store/userStore";
+    import { format } from "date-fns";
 
     const userStore = useUserStore();
     const { user } = storeToRefs(userStore);
 
     const disabledState = computed(() => {
-        return ["super-super-admin", "super-admin", "admin"].includes(user.value);
+        return ["SUPER_SUPER_ADMIN", "SUPER_ADMIN", "ADMIN"].includes(user.value);
     });
 
     const message = useMessage();
+    const loadingBar = useLoadingBar();
 
-    const holidaysStore = useHolidaysStore();
+    const holidaysStore = useHolidaysListStore();
     const { holidaysList } = storeToRefs(holidaysStore);
-    const { deleteHolidays } = holidaysStore;
+    const { deleteHolidays, getHolidays } = holidaysStore;
 
-    const computedList = computed(() => {
-        return holidaysList.value.map((item) => ({ ...item, key: item.id }));
+    onMounted(() => getHolidays({ message, loadingBar }));
+
+    const computedHolidaysList = computed(() => {
+        return holidaysList.value.map((item) => {
+            const date = format(new Date(`${new Date().getFullYear()}-${item.month}-${item.day}`), "MMM dd, yyyy");
+            return { ...item, key: item.id, date };
+        });
     });
 
-    const createData = () => computedList;
+    const createData = () => computedHolidaysList;
 
     const data = ref(createData());
 
@@ -81,13 +88,6 @@
 
     const createColumns = () => [
         {
-            type: "selection",
-            disabled(row) {
-                return row.name === "Edward King 3";
-            },
-            fixed: "left",
-        },
-        {
             title: "Name of holiday",
             key: "name",
         },
@@ -97,7 +97,6 @@
         },
     ];
     const columns = createColumns();
-
 
     const rowProps = (row) => {
         return {

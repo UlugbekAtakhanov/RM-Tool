@@ -1,6 +1,6 @@
 <template>
     <n-form-item :label="label" label-style="font-weight: 600" :path="path">
-        <n-date-picker @update:value="onChange" class="w-full" type="date" clearable @keydown.enter.prevent />
+        <n-date-picker @update:value="onChange" class="w-full" type="date" clearable @keydown.enter.prevent :format="format" />
     </n-form-item>
 </template>
 
@@ -16,4 +16,6 @@
     const onChange = (value) => {
         emit("update:value", value);
     };
+
+    const format = "MMM dd, yyyy";
 </script>

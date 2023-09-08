@@ -4,6 +4,8 @@
             <n-loading-bar-provider>
                 <n-dialog-provider>
                     <RouterView />
+                    <div className="circle1"></div>
+                    <div className="circle2"></div>
                 </n-dialog-provider>
             </n-loading-bar-provider>
         </n-message-provider>
@@ -12,37 +14,24 @@
 
 <script setup>
     import { NConfigProvider } from "naive-ui";
+    import { useRouter } from "vue-router";
     import "./axios/global";
     import { globalRouter } from "./router/globalRouter";
-    import { useRouter } from "vue-router";
-    import { onMounted } from "vue";
-    import { addToLS } from "./utils/localStorage";
-
-    // must be deleted in future
-    onMounted(() => addToLS("userRole", "super-super-admin"));
 
     // configuring global router to use in axios interceptor
     const router = useRouter();
     globalRouter.router = router;
 
-    // onMounted(() => {
-    //     const fetchData = async () => {
-    //         onMounted;
-    //         try {
-    //             const data = await axios.get("/products");
-    //             console.log(data);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     fetchData();
-    // });
-
     const lightThemeOverrides = {
         common: {
-            primaryColor: "#672CC7",
-            primaryColorHover: "#471894",
-            primaryColorPressed: "#7d4dcc",
+            primaryColor: "#0369a1",
+            primaryColorHover: "#075985",
+            primaryColorPressed: "#0284c7",
+            hoverColor: "#38bdf8",
+            buttonColor2Hover: "#38bdf8",
+            // primaryColor: "#672CC7",
+            // primaryColorHover: "#471894",
+            // primaryColorPressed: "#7d4dcc",
         },
     };
 

@@ -6,8 +6,9 @@ export default defineConfig({
     plugins: [vue()],
     server: {
         proxy: {
-            "/products": {
-                target: "https://dummyjson.com",
+            "/api": {
+                target: "http://localhost:8081",
+                // target: "http://165.227.216.202",
                 changeOrigin: true,
                 secure: false,
                 ws: true,

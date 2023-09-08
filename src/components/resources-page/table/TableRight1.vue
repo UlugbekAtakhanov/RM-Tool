@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="overflow-x-scroll">
         <table class="bg-white text-xs border-b border-l">
             <thead>
                 <tr class="border-b whitespace-nowrap h-[33px] bg-purple-50">
@@ -35,41 +35,48 @@
 </template>
 
 <script setup>
-    import { ref, computed } from "vue";
-    import { useProjectListStore } from "../../../store/projectStore";
-    import { useDateRangeStore } from "../../../store/dateRangeStore";
-    import { storeToRefs } from "pinia";
     import { format } from "date-fns";
-    import { daysWithWeekends, daysInMilliseconds } from "../../../utils/Days";
+    import { storeToRefs } from "pinia";
+    import { computed } from "vue";
+    import { useDateRangeStore } from "../../../store/dateRangeStore";
+    import { useHolidaysListStore } from "../../../store/holidaysStore";
+    import { useProjectListStore } from "../../../store/projectStore";
+    import { daysInMilliseconds, daysWithWeekends } from "../../../utils/Days";
     import Gantline1 from "./GantLine1.vue";
-    import { useHolidaysStore } from "../../../store/holidaysStore";
 
-    const holidaysStore = useHolidaysStore();
+    const holidaysStore = useHolidaysListStore();
     const { holidaysList } = storeToRefs(holidaysStore);
 
     const projectListStore = useProjectListStore();
-    const { resourceList } = storeToRefs(projectListStore);
+    const { resourcesWithProjecstsList } = storeToRefs(projectListStore);
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
+
+    const computedHolidaysList = computed(() => {
+        return holidaysList.value.map((item) => {
+            const date = format(new Date(`${new Date().getFullYear()}-${item.month}-${item.day}`), "MMM dd, yyyy");
+            return { ...item, key: item.id, date };
+        });
+    });
 
     // create arr of days
     const arrOfDays = computed(() => {
         const start = format(new Date(startDate.value), "yyyy-MM-dd");
         const end = format(new Date(endDate.value), "yyyy-MM-dd");
         const days = daysWithWeekends(start, end);
-        const holidays = holidaysList.value.map((holiday) => new Date(holiday.date).getTime());
+        const holidays = computedHolidaysList.value.map((holiday) => new Date(holiday.date).getTime());
         return days.map((day) => ({ ...day, holiday: !day.isWeekends && holidays.includes(new Date(day.date).getTime()) }));
     });
 
     // modify project list giving new keys - startPoint, duration
     const resourceListComputed = computed(() => {
-        const newList = resourceList.value.map((project) => {
+        const newList = resourcesWithProjecstsList.value.map((project) => {
             const newProjects = project.projects.map((item) => {
                 return {
                     ...item,
-                    startPoint: (new Date(item.from) - new Date(startDate.value)) / daysInMilliseconds(1),
-                    duration: (new Date(item.to) - new Date(item.from)) / daysInMilliseconds(1),
+                    startPoint: (new Date(item.startDate) - new Date(startDate.value)) / daysInMilliseconds(1),
+                    duration: (new Date(item.endDate) - new Date(item.startDate)) / daysInMilliseconds(1),
                 };
             });
             return { ...project, projects: newProjects };

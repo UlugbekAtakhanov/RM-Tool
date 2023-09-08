@@ -1,4 +1,4 @@
-import { isWeekend, parse } from "date-fns";
+import { format, isWeekend, parse } from "date-fns";
 
 // days with weekends
 export const daysWithWeekends = (start, end) => {
@@ -46,3 +46,6 @@ export const daysInMilliseconds = (n) => 1000 * 60 * 60 * 24 * n;
 
 // milliseconds in days
 export const millisecondsInDays = (ml) => ml / (1000 * 60 * 60 * 24);
+
+// formatting date
+export const formattingDate = (date) => format(new Date(date), "MMM dd, yyyy");

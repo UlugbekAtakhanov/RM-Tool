@@ -17,29 +17,59 @@
             </n-button>
         </div>
         <div class="px-2">
-            <UsersTable @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
+            <div v-show="usersIsLoading">Loading...</div>
+            <UsersTable v-show="!usersIsLoading" @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
         </div>
     </div>
 </template>
 
 <script setup>
+    import { useLoadingBar, useMessage } from "naive-ui";
+    import { storeToRefs } from "pinia";
+    import { computed, ref, onMounted } from "vue";
     import Modal from "../components/Modal.vue";
     import AddNewUsersForm from "../components/forms/AddNewUsersForm.vue";
     import UsersTable from "../components/users-page/table/UsersTable.vue";
-    import { ref, toRef, computed } from "vue";
     import { useUsersListStore } from "../store/usersListStore";
-    import { useMessage } from "naive-ui";
-    import { storeToRefs } from "pinia";
+    import { getFromLS } from "../utils/localStorage";
 
     const message = useMessage();
-    const usersListStore = useUsersListStore();
-    const { usersList } = storeToRefs(usersListStore);
-    const { deleteUsers } = usersListStore;
+    const loadingBar = useLoadingBar();
+    const user = getFromLS("user");
 
-    const computedList = computed(() => {
-        return usersList.value.map((item) => ({ ...item, key: item.id }));
+    const usersListStore = useUsersListStore();
+    const { usersList, resourceList, usersIsLoading } = storeToRefs(usersListStore);
+    const { deleteUsers, getUsers, getResources } = usersListStore;
+
+    onMounted(() => {
+        if (user.includes("RESOURCE_MANAGER")) {
+            getResources({ message, loadingBar });
+        } else {
+            getUsers({ message, loadingBar });
+        }
     });
 
+    const list = user.includes("RESOURCE_MANAGER") ? resourceList : usersList;
+
+    // preparing users list for displaying in the table
+    const computedList = computed(() => {
+        return list.value.map((item) => {
+            // rewriting roles for UI
+            const roles = item.roles
+                ? item.roles
+                      .map((i) => {
+                          if (i === "SUPER_SUPER_ADMIN") return "Administrator";
+                          if (i === "SUPER_ADMIN") return "PKF Admin";
+                          if (i === "ADMIN") return "Client Admin";
+                          if (i === "RESOURCE_MANAGER") return "Resource manager";
+                          if (i === "STAFF") return "Staff";
+                          return;
+                      })
+                      .join(", ")
+                : null;
+            return { ...item, key: item.id, name: `${item.firstName} ${item.lastName}`, roles };
+        });
+    });
     const createData = () => computedList;
     const data = ref(createData());
 
@@ -48,10 +78,8 @@
 
     const deleleteHandler = () => {
         const deletingListKeys = checkedRowKeysRef.value;
-        usersList.value = usersList.value.filter((user) => !deletingListKeys.includes(user.id));
-        deleteUsers(deletingListKeys);
+        deleteUsers({ userIdList: deletingListKeys, message, loadingBar });
         deleteDisabledState.value = true;
-        message.error("Deleted successfully.");
     };
 
     const handleCheck = (rowKeys) => {

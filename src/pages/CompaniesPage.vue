@@ -17,24 +17,29 @@
             </n-button>
         </div>
         <div class="px-2">
-            <CompaniesTable @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
+            <div v-show="companyIsLoading">Loading...</div>
+            <CompaniesTable v-show="!companyIsLoading" @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
         </div>
     </div>
 </template>
 
 <script setup>
-    import { useMessage } from "naive-ui";
+    import { useLoadingBar, useMessage } from "naive-ui";
+    import { storeToRefs } from "pinia";
+    import { computed, onMounted, ref } from "vue";
     import Modal from "../components/Modal.vue";
     import CompaniesTable from "../components/companies-page/table/CompaniesTable.vue";
     import AddNewCompanyForm from "../components/forms/AddNewCompanyForm.vue";
     import { useCompaniesListStore } from "../store/companiesListStore";
-    import { toRef, computed, ref } from "vue";
-    import { storeToRefs } from "pinia";
 
     const message = useMessage();
+    const loadingBar = useLoadingBar();
+
     const companiesListStore = useCompaniesListStore();
-    const { companiesList } = storeToRefs(companiesListStore);
-    const { deleteCompanies } = companiesListStore;
+    const { companiesList, companyIsLoading } = storeToRefs(companiesListStore);
+    const { deleteCompanies, getCompaniesList } = companiesListStore;
+
+    onMounted(() => getCompaniesList({ loadingBar, message }));
 
     const computedList = computed(() => {
         return companiesList.value.map((item) => ({ ...item, key: item.id }));
@@ -48,10 +53,8 @@
 
     const deleleteHandler = () => {
         const deletingListKeys = checkedRowKeysRef.value;
-        companiesList.value = companiesList.value.filter((user) => !deletingListKeys.includes(user.id));
-        deleteCompanies(deletingListKeys);
+        deleteCompanies({ companiesIdList: deletingListKeys, message, loadingBar });
         deleteDisabledState.value = true;
-        message.error("Deleted successfully.");
     };
 
     const handleCheck = (rowKeys) => {

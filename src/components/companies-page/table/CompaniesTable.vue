@@ -1,7 +1,7 @@
 <template>
     <n-data-table
-        :scroll-x="1800"
         virtual-scroll
+        :scroll-x="1400"
         size="small"
         :columns="columns"
         :data="data"
@@ -17,11 +17,6 @@
 <script setup>
     import { NInput } from "naive-ui";
     import { defineComponent, h, nextTick, reactive, ref } from "vue";
-
-    // const message = useMessage();
-    // const lodaingBar = useLoadingBar();
-
-    // const {} = useGetCompaniesListData({ lodaingBar });
 
     // props
     const { data } = defineProps({ checkedRowKeysRef: Array, data: Array });
@@ -98,26 +93,26 @@
         },
         {
             title: "Contact First Name",
-            key: "contact-first-name",
+            key: "contactFirstName",
             render(row) {
                 const index = getDataIndex(row.key);
                 return h(ShowOrEdit, {
-                    value: row["contact-first-name"],
+                    value: row["contactFirstName"],
                     onUpdateValue(v) {
-                        data[index]["contact-first-name"] = v;
+                        data[index]["contactFirstName"] = v;
                     },
                 });
             },
         },
         {
             title: "Contact Last Name",
-            key: "contact-last-name",
+            key: "contactLastName",
             render(row) {
                 const index = getDataIndex(row.key);
                 return h(ShowOrEdit, {
-                    value: row["contact-last-name"],
+                    value: row["contactLastName"],
                     onUpdateValue(v) {
-                        data[index]["contact-last-name"] = v;
+                        data[index]["contactLastName"] = v;
                     },
                 });
             },
@@ -189,7 +184,7 @@
         return {
             style: "cursor: pointer;",
             onClick: (e) => {
-                console.log(e);
+                // console.log(e);
                 // message.info(row.name);
             },
         };

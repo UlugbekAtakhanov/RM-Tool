@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getFromLS } from "../utils/localStorage";
-
-const token = getFromLS("token") ?? true;
+import { includesWithin } from "../utils/includesWithin";
 
 const routes = [
     {
@@ -9,6 +8,7 @@ const routes = [
         name: "login",
         component: () => import("../layouts/LoginPageLayout.vue"),
         beforeEnter: async (to, from, next) => {
+            const token = getFromLS("token") ?? false;
             if (token) {
                 return next("/");
             }
@@ -20,6 +20,7 @@ const routes = [
         name: "register",
         component: () => import("../layouts/RegisterPageLayout.vue"),
         beforeEnter: async (to, from, next) => {
+            const token = getFromLS("token") ?? false;
             if (token) {
                 return next("/");
             }
@@ -31,6 +32,7 @@ const routes = [
         name: "forgot-password",
         component: () => import("../layouts/ForgotPasswordPageLayout.vue"),
         beforeEnter: async (to, from, next) => {
+            const token = getFromLS("token") ?? false;
             if (token) {
                 return next("/");
             }
@@ -42,6 +44,7 @@ const routes = [
         name: "reset-password",
         component: () => import("../layouts/ResetPasswordPageLayout.vue"),
         beforeEnter: async (to, from, next) => {
+            const token = getFromLS("token") ?? false;
             if (token) {
                 return next("/");
             }
@@ -58,8 +61,8 @@ const routes = [
                 name: "gant-chart",
                 component: () => import("../pages/GantPage.vue"),
                 beforeEnter: async (to, from, next) => {
-                    const userRole = getFromLS("userRole");
-                    if (!["rm"].includes(userRole)) {
+                    const user = getFromLS("user");
+                    if (!includesWithin(user, ["RESOURCE_MANAGER"])) {
                         return next("/");
                     }
                     next();
@@ -75,8 +78,8 @@ const routes = [
                 name: "resources",
                 component: () => import("../pages/ResourcesPage.vue"),
                 beforeEnter: async (to, from, next) => {
-                    const userRole = getFromLS("userRole");
-                    if (!["rm"].includes(userRole)) {
+                    const user = getFromLS("user");
+                    if (!includesWithin(user, ["RESOURCE_MANAGER"])) {
                         return next("/");
                     }
                     next();
@@ -102,6 +105,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    const token = getFromLS("token") ?? false;
     if (token || to.name === "login" || to.name === "register" || to.name === "forgot-password" || to.name === "reset-password") {
         next();
     } else {

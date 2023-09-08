@@ -46,30 +46,37 @@
 </template>
 
 <script setup>
-    import { computed, ref } from "vue";
-    import { storeToRefs } from "pinia";
     import { format } from "date-fns";
-    import { daysWithWeekends, daysInMilliseconds } from "../../../utils/Days";
+    import { storeToRefs } from "pinia";
+    import { computed } from "vue";
     import { useDateRangeStore } from "../../../store/dateRangeStore";
-    import { useProjectListStore } from "../../../store/projectStore";
+    import { useHolidaysListStore } from "../../../store/holidaysStore";
+    import { daysInMilliseconds, daysWithWeekends } from "../../../utils/Days";
     import GantLine from "./GantLine.vue";
-    import { useHolidaysStore } from "../../../store/holidaysStore";
+    import { useProjectListStore } from "../../../store/projectStore";
 
-    const holidaysStore = useHolidaysStore();
+    const holidaysStore = useHolidaysListStore();
     const { holidaysList } = storeToRefs(holidaysStore);
 
     const dateRangeStore = useDateRangeStore();
     const { startDate, endDate } = storeToRefs(dateRangeStore);
 
-    const { projectList: list } = useProjectListStore();
-    const projectList = ref(list);
+    const projectListStore = useProjectListStore();
+    const { modifiedProjectList: projectList } = storeToRefs(projectListStore);
+
+    const computedHolidaysList = computed(() => {
+        return holidaysList.value.map((item) => {
+            const date = format(new Date(`${new Date().getFullYear()}-${item.month}-${item.day}`), "MMM dd, yyyy");
+            return { ...item, key: item.id, date };
+        });
+    });
 
     // create arr of days
     const arrOfDays = computed(() => {
         const start = format(new Date(startDate.value), "yyyy-MM-dd");
         const end = format(new Date(endDate.value), "yyyy-MM-dd");
         const days = daysWithWeekends(start, end);
-        const holidays = holidaysList.value.map((holiday) => new Date(holiday.date).getTime());
+        const holidays = computedHolidaysList.value.map((holiday) => new Date(holiday.date).getTime());
         return days.map((day) => ({ ...day, holiday: !day.isWeekends && holidays.includes(new Date(day.date).getTime()) }));
     });
 
@@ -78,8 +85,8 @@
         const newList = projectList.value.map((project) => {
             const newObj = {
                 ...project,
-                startPoint: (new Date(project.from) - new Date(startDate.value)) / daysInMilliseconds(1),
-                duration: (new Date(project.to) - new Date(project.from)) / daysInMilliseconds(1),
+                startPoint: (new Date(project.startDate) - new Date(startDate.value)) / daysInMilliseconds(1),
+                duration: (new Date(project.endDate) - new Date(project.startDate)) / daysInMilliseconds(1),
             };
             return newObj;
         });
