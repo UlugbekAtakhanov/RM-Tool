@@ -1,7 +1,7 @@
 <template>
     <div class="h-screen flex justify-center items-center flex-col">
         <h1 class="text-3xl text-center mb-8 text-primary font-bold">RM Tool</h1>
-        <div class="bg-white w-[600px] rounded-2xl shadow">
+        <div class="bg-white/60 !backdrop-blur-x w-[600px] rounded-2xl shadow">
             <div class="flex">
                 <!-- img -->
                 <div class="flex-1">
@@ -30,12 +30,7 @@
                         </n-form-item>
 
                         <n-form-item label="Re-password" label-style="font-weight: 600" path="rePassword">
-                            <n-input
-                                type="password"
-                                v-model:value="formValue.rePassword"
-                                placeholder="Confirm password"
-                                show-password-on="mousedown"
-                            />
+                            <n-input type="password" v-model:value="formValue.rePassword" placeholder="Confirm password" show-password-on="mousedown" />
                         </n-form-item>
 
                         <n-form-item class="flex">

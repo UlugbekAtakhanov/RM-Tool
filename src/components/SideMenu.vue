@@ -10,7 +10,7 @@
                 show-trigger
                 @collapse="collapsed = true"
                 @expand="collapsed = false"
-                style="background-color: rgba(255, 255, 255, 0.7);"
+                style="background-color: rgba(255, 255, 255, .8);"
             >
                 <div class="h-full overflow-y-scroll relative">
                     <n-menu

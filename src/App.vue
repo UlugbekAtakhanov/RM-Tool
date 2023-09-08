@@ -28,10 +28,7 @@
             primaryColorHover: "#075985",
             primaryColorPressed: "#0284c7",
             hoverColor: "#38bdf8",
-            buttonColor2Hover: "#38bdf8",
-            // primaryColor: "#672CC7",
-            // primaryColorHover: "#471894",
-            // primaryColorPressed: "#7d4dcc",
+            tableColorHover: "#38bdf8",
         },
     };
 

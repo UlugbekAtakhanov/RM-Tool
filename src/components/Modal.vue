@@ -15,7 +15,7 @@
         <n-card style="width: 75%" :bordered="false" role="dialog" aria-modal="true">
             <div
                 @click="showModal = false"
-                class="hover:border hover:bg-purple-50 cursor-pointer ml-auto w-5 h-5 flex justify-center items-center rounded"
+                class="hover:border hover:bg-secondary/30 cursor-pointer ml-auto w-5 h-5 flex justify-center items-center rounded"
             >
                 <i class="fa-solid fa-xmark"></i>
             </div>

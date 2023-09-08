@@ -49,8 +49,10 @@ export const useUsersListStore = defineStore("users-list", {
                 message.success("User is created.");
             } catch (error) {
                 console.log(error);
+                if (error.response.status === 409) {
+                    message.error("Email is already exist.");
+                }
                 loadingBar.error();
-                message.error(error.message);
             } finally {
                 this.usersIsLoading = false;
             }

@@ -17,8 +17,7 @@
             </n-button>
         </div>
         <div class="px-2">
-            <div v-show="companyIsLoading">Loading...</div>
-            <CompaniesTable v-show="!companyIsLoading" @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
+            <CompaniesTable @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
         </div>
     </div>
 </template>
@@ -36,7 +35,7 @@
     const loadingBar = useLoadingBar();
 
     const companiesListStore = useCompaniesListStore();
-    const { companiesList, companyIsLoading } = storeToRefs(companiesListStore);
+    const { companiesList } = storeToRefs(companiesListStore);
     const { deleteCompanies, getCompaniesList } = companiesListStore;
 
     onMounted(() => getCompaniesList({ loadingBar, message }));

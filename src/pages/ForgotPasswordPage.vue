@@ -1,7 +1,7 @@
 <template>
     <div class="h-screen flex justify-center items-center flex-col">
         <h1 class="text-3xl text-center mb-8 text-primary font-bold">RM Tool</h1>
-        <div class="bg-white w-[600px] rounded-2xl shadow">
+        <div class="bg-white/60 backdrop-blur-xl w-[600px] rounded-2xl shadow">
             <div class="flex">
                 <!-- img -->
                 <div class="flex-1">

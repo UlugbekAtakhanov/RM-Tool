@@ -17,8 +17,7 @@
             </n-button>
         </div>
         <div class="px-2">
-            <div v-show="usersIsLoading">Loading...</div>
-            <UsersTable v-show="!usersIsLoading" @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
+            <UsersTable @handleCheck="handleCheck" :checkedRowKeysRef="checkedRowKeysRef" :data="data" />
         </div>
     </div>
 </template>

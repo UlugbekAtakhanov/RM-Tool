@@ -8,12 +8,17 @@
         :row-key="(row) => row.key"
         @update:checked-row-keys="(rowKeys) => handleCheck(rowKeys)"
         :row-props="rowProps"
+        :loading="usersIsLoading"
     />
 </template>
 
 <script setup>
     import { reactive } from "vue";
+    import { useUsersListStore } from "../../../store/usersListStore";
+    import { storeToRefs } from "pinia";
 
+    const usersListStore = useUsersListStore();
+    const { usersIsLoading } = storeToRefs(usersListStore);
     // props
     defineProps({ checkedRowKeysRef: Array, data: Array });
 

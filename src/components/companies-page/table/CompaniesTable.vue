@@ -11,12 +11,18 @@
         @update:checked-row-keys="handleCheck"
         :row-props="rowProps"
         @update:page="handlePageChange"
+        :loading="companyIsLoading"
     />
 </template>
 
 <script setup>
     import { NInput } from "naive-ui";
     import { defineComponent, h, nextTick, reactive, ref } from "vue";
+    import { useCompaniesListStore } from "../../../store/companiesListStore";
+    import { storeToRefs } from "pinia";
+
+    const companiesListStore = useCompaniesListStore();
+    const { companyIsLoading } = storeToRefs(companiesListStore);
 
     // props
     const { data } = defineProps({ checkedRowKeysRef: Array, data: Array });

@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-white/70 backdrop-blur-xl text-sm font-semibold border-b p-4 flex items-center gap-4">
+    <div class="w-full bg-white/80 backdrop-blur-xl text-sm font-semibold p-4 flex items-center gap-4">
         <RouterLink :to="{ name: 'home' }" class="text-2xl !text-primary !no-underline">RM Tool</RouterLink>
 
         <div class="ml-auto divide-x-[1px] flex items-center">
